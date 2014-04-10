@@ -12,4 +12,9 @@ public class TestFirstLucene {
 		lucene.index();
 	}
 	
+	@Test
+	public void testSearcher(){
+		FirstLucene lucene = new FirstLucene();
+		lucene.searcher();
+	}
 }
