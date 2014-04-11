@@ -7,6 +7,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -78,4 +79,20 @@ public class IndexUtil {
 		}
 	}
 
+
+	/**
+	 * 查询
+	 */
+	public void query(){
+		try {
+			IndexReader reader = IndexReader.open(directory);
+			//通过reader可以有效的获取到文档的数量
+			System.out.println("numDocs:"+reader.numDocs());
+			System.out.println("maxDoc:"+reader.maxDoc());
+		} catch (CorruptIndexException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

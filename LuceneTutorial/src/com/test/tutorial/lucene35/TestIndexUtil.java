@@ -12,6 +12,11 @@ public class TestIndexUtil {
 		iu.index();
 	}
 	
+	@Test
+	public void testQuery(){
+		IndexUtil iu = new IndexUtil();
+		iu.query();
+	}
 	
 	
 }
