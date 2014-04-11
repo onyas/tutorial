@@ -275,7 +275,7 @@ public class IndexUtil {
 				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
 				Document doc = searcher.doc(sd.doc);
 				// 8、根据Document对象获取需要的值
-				System.out.println(sd.doc + "--" + doc.get("from") + "---"
+				System.out.println(sd.score+"--"+sd.doc + "--" + doc.get("from") + "---"
 						+ doc.get("name") + "--" + doc.get("content") + "--"
 						+ doc.get("attach") + "--" + doc.get("date"));
 			}
