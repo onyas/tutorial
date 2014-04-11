@@ -2,6 +2,9 @@ package com.tutorial.lucene35;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +36,7 @@ public class IndexUtil {
 	private String[] contents = { "hi,nice", "hi nice shirt", "hi nice boy",
 			"hi nice nice", "nice shot", "nice hhhhh" };
 	private int[] attachs = { 3, 2, 3, 4, 2, 1 };
+	private Date[] dates = null;
 	// 定义权值的信息
 	private Map<String, Float> scores = new HashMap<String, Float>();
 
@@ -43,7 +47,24 @@ public class IndexUtil {
 			directory = FSDirectory.open(new File("F:/Test/lucene/index02"));
 			scores.put("qq.com", 3.0f);
 			scores.put("sina.com", 2.0f);
+			setDates();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void setDates() {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		dates = new Date[ids.length];
+		try {
+			dates[0] = sdf.parse("2014-4-11");
+			dates[1] = sdf.parse("2014-5-21");
+			dates[2] = sdf.parse("2014-2-25");
+			dates[3] = sdf.parse("2014-1-19");
+			dates[4] = sdf.parse("2014-7-25");
+			dates[5] = sdf.parse("2014-9-16");
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
@@ -72,6 +93,9 @@ public class IndexUtil {
 						Field.Index.ANALYZED));
 				doc.add(new NumericField("attach", Field.Store.YES, false)
 						.setIntValue(attachs[i]));
+				// 存储日期
+				doc.add(new NumericField("date", Field.Store.YES, false)
+						.setLongValue(dates[i].getTime()));
 				// 根据分值中存储的类型，为doc设置不同的权值
 				String from = froms[i].substring(froms[i].lastIndexOf("@") + 1);
 				System.out.println(from);
@@ -252,7 +276,8 @@ public class IndexUtil {
 				Document doc = searcher.doc(sd.doc);
 				// 8、根据Document对象获取需要的值
 				System.out.println(sd.doc + "--" + doc.get("from") + "---"
-						+ doc.get("name") + "--" + doc.get("content"));
+						+ doc.get("name") + "--" + doc.get("content") + "--"
+						+ doc.get("attach") + "--" + doc.get("date"));
 			}
 			// 9、关闭reader
 			reader.clone();
