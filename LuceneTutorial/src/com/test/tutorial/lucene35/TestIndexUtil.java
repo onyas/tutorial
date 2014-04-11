@@ -24,4 +24,10 @@ public class TestIndexUtil {
 		iu.delete();
 	}
 	
+	@Test
+	public void testRecover(){
+		IndexUtil iu = new IndexUtil();
+		iu.recover();
+	}
+	
 }

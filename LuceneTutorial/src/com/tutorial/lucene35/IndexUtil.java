@@ -89,6 +89,8 @@ public class IndexUtil {
 			// 通过reader可以有效的获取到文档的数量
 			System.out.println("numDocs:" + reader.numDocs());
 			System.out.println("maxDoc:" + reader.maxDoc());
+			System.out.println("deletedDocs:" + reader.numDeletedDocs());
+			reader.close();
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -104,9 +106,9 @@ public class IndexUtil {
 		try {
 			writer = new IndexWriter(directory, new IndexWriterConfig(
 					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
-			//参数是一个选项，可以是一个Query,也可以是一个Term，term是一个精确查找的值
+			// 参数是一个选项，可以是一个Query,也可以是一个Term，term是一个精确查找的值
 			writer.deleteDocuments(new Term("id", "1"));
-			//此时删除的文档不会完全删除，而是存储在一个回收站中，可以恢复
+			// 此时删除的文档不会完全删除，而是存储在一个回收站中，可以恢复
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (LockObtainFailedException e) {
@@ -123,5 +125,21 @@ public class IndexUtil {
 					e.printStackTrace();
 				}
 		}
+	}
+
+	/**
+	 * 恢复删除的索引
+	 */
+	public void recover() {
+		try {
+			IndexReader reader = IndexReader.open(directory,false);
+			reader.undeleteAll();
+			reader.close();
+		} catch (CorruptIndexException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
