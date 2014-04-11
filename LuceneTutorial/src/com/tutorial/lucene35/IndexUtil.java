@@ -42,6 +42,8 @@ public class IndexUtil {
 
 	private Directory directory = null;
 
+	private static IndexReader reader;
+
 	public IndexUtil() {
 		try {
 			directory = FSDirectory.open(new File("F:/Test/lucene/index02"));
@@ -67,6 +69,29 @@ public class IndexUtil {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 得到IndexSearcher
+	 * @return
+	 */
+	public IndexSearcher getSearcher() {
+		try {
+			if (reader == null) {
+				reader = IndexReader.open(directory);
+			} else {
+				IndexReader ir = IndexReader.openIfChanged(reader);
+				if ( ir!= null) {
+					reader = ir;
+				}
+			}
+			return new IndexSearcher(reader);
+		} catch (CorruptIndexException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -261,10 +286,8 @@ public class IndexUtil {
 	 */
 	public void search() {
 		try {
-			// 2、创建IndexReader
-			IndexReader reader = IndexReader.open(directory);
 			// 3、根据IndexReader创建IndexSearcher
-			IndexSearcher searcher = new IndexSearcher(reader);
+			IndexSearcher searcher = getSearcher();
 			// 4、创建搜索的Query
 			TermQuery query = new TermQuery(new Term("content", "nice"));
 			// 5、根据searcher搜索并且返回TopDocs
@@ -275,12 +298,12 @@ public class IndexUtil {
 				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
 				Document doc = searcher.doc(sd.doc);
 				// 8、根据Document对象获取需要的值
-				System.out.println(sd.score+"--"+sd.doc + "--" + doc.get("from") + "---"
-						+ doc.get("name") + "--" + doc.get("content") + "--"
-						+ doc.get("attach") + "--" + doc.get("date"));
+				System.out.println(sd.score + "--" + sd.doc + "--"
+						+ doc.get("from") + "---" + doc.get("name") + "--"
+						+ doc.get("content") + "--" + doc.get("attach") + "--"
+						+ doc.get("date"));
 			}
-			// 9、关闭reader
-			reader.clone();
+			searcher.close();
 		} catch (CorruptIndexException e1) {
 			e1.printStackTrace();
 		} catch (IOException e) {

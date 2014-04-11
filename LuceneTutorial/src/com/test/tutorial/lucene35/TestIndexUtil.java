@@ -49,6 +49,16 @@ public class TestIndexUtil {
 	@Test
 	public void testSearch(){
 		IndexUtil iu = new IndexUtil();
-		iu.search();
+		for(int i=0;i<5;i++){
+			iu.search();
+			System.out.println("--------");
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
+	
+	
 }
