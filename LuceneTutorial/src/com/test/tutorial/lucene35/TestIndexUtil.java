@@ -30,4 +30,11 @@ public class TestIndexUtil {
 		iu.recover();
 	}
 	
+	
+	@Test
+	public void testForceMergeDeletes(){
+		IndexUtil iu = new IndexUtil();
+		iu.forceMergeDeletes();
+	}
+	
 }

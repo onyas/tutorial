@@ -132,6 +132,7 @@ public class IndexUtil {
 	 */
 	public void recover() {
 		try {
+			//恢复时，必须把IndexReader的只读(readOnly)设置为false
 			IndexReader reader = IndexReader.open(directory,false);
 			reader.undeleteAll();
 			reader.close();
@@ -141,5 +142,32 @@ public class IndexUtil {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * 强制删除索引
+	 */
+	public void forceMergeDeletes() {
+		IndexWriter writer = null;
+		try {
+			writer = new IndexWriter(directory, new IndexWriterConfig(
+					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
+			writer.forceMergeDeletes();
+		} catch (CorruptIndexException e) {
+			e.printStackTrace();
+		} catch (LockObtainFailedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null)
+				try {
+					writer.close();
+				} catch (CorruptIndexException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
 	}
 }
