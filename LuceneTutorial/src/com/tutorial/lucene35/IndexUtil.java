@@ -8,15 +8,13 @@ import java.util.Map;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
@@ -72,6 +70,8 @@ public class IndexUtil {
 						Field.Index.NOT_ANALYZED));
 				doc.add(new Field("content", contents[i], Field.Store.NO,
 						Field.Index.ANALYZED));
+				doc.add(new NumericField("attach", Field.Store.YES, false)
+						.setIntValue(attachs[i]));
 				// 根据分值中存储的类型，为doc设置不同的权值
 				String from = froms[i].substring(froms[i].lastIndexOf("@") + 1);
 				System.out.println(from);
@@ -242,7 +242,7 @@ public class IndexUtil {
 			// 3、根据IndexReader创建IndexSearcher
 			IndexSearcher searcher = new IndexSearcher(reader);
 			// 4、创建搜索的Query
-			TermQuery query = new TermQuery(new Term("content","nice"));
+			TermQuery query = new TermQuery(new Term("content", "nice"));
 			// 5、根据searcher搜索并且返回TopDocs
 			TopDocs tds = searcher.search(query, 10);
 			// 6、根据TopDocs获取ScoreDoc对象
@@ -251,7 +251,8 @@ public class IndexUtil {
 				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
 				Document doc = searcher.doc(sd.doc);
 				// 8、根据Document对象获取需要的值
-				System.out.println(sd.doc+"--"+doc.get("from")+"---"+doc.get("name")+"--"+doc.get("content"));
+				System.out.println(sd.doc + "--" + doc.get("from") + "---"
+						+ doc.get("name") + "--" + doc.get("content"));
 			}
 			// 9、关闭reader
 			reader.clone();
@@ -259,6 +260,6 @@ public class IndexUtil {
 			e1.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 }
