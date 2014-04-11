@@ -10,6 +10,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
@@ -79,20 +80,48 @@ public class IndexUtil {
 		}
 	}
 
-
 	/**
 	 * 查询
 	 */
-	public void query(){
+	public void query() {
 		try {
 			IndexReader reader = IndexReader.open(directory);
-			//通过reader可以有效的获取到文档的数量
-			System.out.println("numDocs:"+reader.numDocs());
-			System.out.println("maxDoc:"+reader.maxDoc());
+			// 通过reader可以有效的获取到文档的数量
+			System.out.println("numDocs:" + reader.numDocs());
+			System.out.println("maxDoc:" + reader.maxDoc());
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 删除索引
+	 */
+	public void delete() {
+		IndexWriter writer = null;
+		try {
+			writer = new IndexWriter(directory, new IndexWriterConfig(
+					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
+			//参数是一个选项，可以是一个Query,也可以是一个Term，term是一个精确查找的值
+			writer.deleteDocuments(new Term("id", "1"));
+			//此时删除的文档不会完全删除，而是存储在一个回收站中，可以恢复
+		} catch (CorruptIndexException e) {
+			e.printStackTrace();
+		} catch (LockObtainFailedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null)
+				try {
+					writer.close();
+				} catch (CorruptIndexException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 	}
 }

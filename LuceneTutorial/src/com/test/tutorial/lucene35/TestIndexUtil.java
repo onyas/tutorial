@@ -18,5 +18,10 @@ public class TestIndexUtil {
 		iu.query();
 	}
 	
+	@Test
+	public void testDelete(){
+		IndexUtil iu = new IndexUtil();
+		iu.delete();
+	}
 	
 }
