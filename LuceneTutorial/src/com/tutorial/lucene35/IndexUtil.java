@@ -2,6 +2,8 @@ package com.tutorial.lucene35;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -11,6 +13,13 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
@@ -26,12 +35,16 @@ public class IndexUtil {
 	private String[] contents = { "hi,nice", "hi nice shirt", "hi nice boy",
 			"hi nice nice", "nice shot", "nice hhhhh" };
 	private int[] attachs = { 3, 2, 3, 4, 2, 1 };
+	// 定义权值的信息
+	private Map<String, Float> scores = new HashMap<String, Float>();
 
 	private Directory directory = null;
 
 	public IndexUtil() {
 		try {
 			directory = FSDirectory.open(new File("F:/Test/lucene/index02"));
+			scores.put("qq.com", 3.0f);
+			scores.put("sina.com", 2.0f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +72,15 @@ public class IndexUtil {
 						Field.Index.NOT_ANALYZED));
 				doc.add(new Field("content", contents[i], Field.Store.NO,
 						Field.Index.ANALYZED));
+				// 根据分值中存储的类型，为doc设置不同的权值
+				String from = froms[i].substring(froms[i].lastIndexOf("@") + 1);
+				System.out.println(from);
+				if (scores.containsKey(from)) {
+					doc.setBoost(scores.get(from));
+				} else {
+					doc.setBoost(1.0f);
+				}
+
 				writer.addDocument(doc);
 			}
 
@@ -133,8 +155,8 @@ public class IndexUtil {
 	 */
 	public void recover() {
 		try {
-			//恢复时，必须把IndexReader的只读(readOnly)设置为false
-			IndexReader reader = IndexReader.open(directory,false);
+			// 恢复时，必须把IndexReader的只读(readOnly)设置为false
+			IndexReader reader = IndexReader.open(directory, false);
 			reader.undeleteAll();
 			reader.close();
 		} catch (CorruptIndexException e) {
@@ -172,27 +194,26 @@ public class IndexUtil {
 		}
 	}
 
-	
 	/**
 	 * 更新索引
 	 */
-	public void update(){
+	public void update() {
 		IndexWriter writer = null;
 		try {
 			writer = new IndexWriter(directory, new IndexWriterConfig(
 					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
 
-			//Lucene并不支持更新，这里的更新操作其实是先删除后添加
+			// Lucene并不支持更新，这里的更新操作其实是先删除后添加
 			Document doc = new Document();
 			doc.add(new Field("id", "11", Field.Store.YES,
 					Field.Index.NOT_ANALYZED_NO_NORMS));
-			doc.add(new Field("name","update", Field.Store.YES,
+			doc.add(new Field("name", "update", Field.Store.YES,
 					Field.Index.ANALYZED));
 			doc.add(new Field("from", "update", Field.Store.YES,
 					Field.Index.NOT_ANALYZED));
 			doc.add(new Field("content", "update", Field.Store.NO,
 					Field.Index.ANALYZED));
-			writer.updateDocument(new Term("id","1"), doc);
+			writer.updateDocument(new Term("id", "1"), doc);
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (LockObtainFailedException e) {
@@ -210,5 +231,34 @@ public class IndexUtil {
 				}
 		}
 	}
-	
+
+	/**
+	 * 搜索
+	 */
+	public void search() {
+		try {
+			// 2、创建IndexReader
+			IndexReader reader = IndexReader.open(directory);
+			// 3、根据IndexReader创建IndexSearcher
+			IndexSearcher searcher = new IndexSearcher(reader);
+			// 4、创建搜索的Query
+			TermQuery query = new TermQuery(new Term("content","nice"));
+			// 5、根据searcher搜索并且返回TopDocs
+			TopDocs tds = searcher.search(query, 10);
+			// 6、根据TopDocs获取ScoreDoc对象
+			ScoreDoc[] sds = tds.scoreDocs;
+			for (ScoreDoc sd : sds) {
+				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
+				Document doc = searcher.doc(sd.doc);
+				// 8、根据Document对象获取需要的值
+				System.out.println(sd.doc+"--"+doc.get("from")+"---"+doc.get("name")+"--"+doc.get("content"));
+			}
+			// 9、关闭reader
+			reader.clone();
+		} catch (CorruptIndexException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
 }
