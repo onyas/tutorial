@@ -46,7 +46,8 @@ public class IndexUtil {
 		try {
 			writer = new IndexWriter(directory, new IndexWriterConfig(
 					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
-
+			writer.deleteAll();
+			writer.commit();
 			Document doc = null;
 			for (int i = 0; i < ids.length; i++) {
 				doc = new Document();
@@ -170,4 +171,44 @@ public class IndexUtil {
 				}
 		}
 	}
+
+	
+	/**
+	 * 更新索引
+	 */
+	public void update(){
+		IndexWriter writer = null;
+		try {
+			writer = new IndexWriter(directory, new IndexWriterConfig(
+					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
+
+			//Lucene并不支持更新，这里的更新操作其实是先删除后添加
+			Document doc = new Document();
+			doc.add(new Field("id", "11", Field.Store.YES,
+					Field.Index.NOT_ANALYZED_NO_NORMS));
+			doc.add(new Field("name","update", Field.Store.YES,
+					Field.Index.ANALYZED));
+			doc.add(new Field("from", "update", Field.Store.YES,
+					Field.Index.NOT_ANALYZED));
+			doc.add(new Field("content", "update", Field.Store.NO,
+					Field.Index.ANALYZED));
+			writer.updateDocument(new Term("id","1"), doc);
+		} catch (CorruptIndexException e) {
+			e.printStackTrace();
+		} catch (LockObtainFailedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null)
+				try {
+					writer.close();
+				} catch (CorruptIndexException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+	}
+	
 }

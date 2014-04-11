@@ -37,4 +37,10 @@ public class TestIndexUtil {
 		iu.forceMergeDeletes();
 	}
 	
+	
+	@Test
+	public void testUpdate(){
+		IndexUtil iu = new IndexUtil();
+		iu.update();
+	}
 }
