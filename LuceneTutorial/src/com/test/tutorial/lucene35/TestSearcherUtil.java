@@ -105,4 +105,9 @@ public class TestSearcherUtil {
 		
 		su.searchByQueryParse(query, 10);
 	}
+	
+	@Test
+	public void testpageSearcher1(){
+		su.pageSearcher1("String",4, 5);
+	}
 }

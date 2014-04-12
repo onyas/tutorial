@@ -16,6 +16,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -64,6 +65,31 @@ public class SearcherUtil {
 	 * @return
 	 */
 	public IndexSearcher getSearcher() {
+		try {
+			if (reader == null) {
+				reader = IndexReader.open(directory);
+			} else {
+				IndexReader ir = IndexReader.openIfChanged(reader);
+				if (ir != null) {
+					reader.close();
+					reader = ir;
+				}
+			}
+			return new IndexSearcher(reader);
+		} catch (CorruptIndexException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 得到IndexSearcher
+	 * 
+	 * @return
+	 */
+	public IndexSearcher getSearcher(Directory directory) {
 		try {
 			if (reader == null) {
 				reader = IndexReader.open(directory);
@@ -392,8 +418,8 @@ public class SearcherUtil {
 			// 4、创建搜索的Query
 			PhraseQuery query = new PhraseQuery();
 			query.setSlop(1);
-			query.add(new Term("content","hi"));
-			query.add(new Term("content","shirt"));
+			query.add(new Term("content", "hi"));
+			query.add(new Term("content", "shirt"));
 			// 5、根据searcher搜索并且返回TopDocs
 			TopDocs tds = searcher.search(query, nums);
 			System.out.println("一共查询到:" + tds.totalHits);
@@ -419,17 +445,18 @@ public class SearcherUtil {
 
 	/**
 	 * 模糊查询
+	 * 
 	 * @param field
 	 * @param value
 	 * @param nums
 	 */
-	public void searchByFuzzy(String field,String value,int nums){
+	public void searchByFuzzy(String field, String value, int nums) {
 		try {
 			// 3、根据IndexReader创建IndexSearcher
 			IndexSearcher searcher = getSearcher();
 			// 4、创建搜索的Query
-			//可以通过相似度来控制所要匹配的程度,0.0f表示精确度最低，不能大于1
-			Query query = new FuzzyQuery(new Term(field,value),0.4f,0);
+			// 可以通过相似度来控制所要匹配的程度,0.0f表示精确度最低，不能大于1
+			Query query = new FuzzyQuery(new Term(field, value), 0.4f, 0);
 			// 5、根据searcher搜索并且返回TopDocs
 			TopDocs tds = searcher.search(query, nums);
 			System.out.println("一共查询到:" + tds.totalHits);
@@ -452,13 +479,14 @@ public class SearcherUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 直接跟据Query对象进行查询
+	 * 
 	 * @param query
 	 * @param nums
 	 */
-	public void searchByQueryParse(Query query,int nums){
+	public void searchByQueryParse(Query query, int nums) {
 		try {
 			// 3、根据IndexReader创建IndexSearcher
 			IndexSearcher searcher = getSearcher();
@@ -484,8 +512,40 @@ public class SearcherUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+	/**
+	 * 分页查询
+	 * 
+	 * @param query
+	 *            查询条件
+	 * @param pageIndex
+	 *            第几页
+	 * @param pageSize
+	 *            每页多少条
+	 */
+	public void pageSearcher1(String query, int pageIndex, int pageSize) {
+		try {
+			Directory directory = FileDemoUtil.getDirectory();// 使用同一个directory
+			IndexSearcher searcher = getSearcher(directory);
+			QueryParser parser = new QueryParser(Version.LUCENE_35, "content",
+					new StandardAnalyzer(Version.LUCENE_35));
+			Query q = parser.parse(query);
+			TopDocs tds = searcher.search(q, 1000);
+			ScoreDoc[] sds = tds.scoreDocs;
+			int start = (pageIndex-1)*pageSize;
+			int end = pageIndex*pageSize;
+			for(int i=start;i<end;i++){
+				Document doc = searcher.doc(sds[i].doc);
+				System.out.println(doc.get("path")+doc.get("name"));
+			}
+			searcher.close();
+		} catch (org.apache.lucene.queryParser.ParseException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void setDates() {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
