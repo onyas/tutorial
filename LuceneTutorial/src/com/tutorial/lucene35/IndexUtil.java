@@ -82,6 +82,7 @@ public class IndexUtil {
 			} else {
 				IndexReader ir = IndexReader.openIfChanged(reader);
 				if ( ir!= null) {
+					reader.close();
 					reader = ir;
 				}
 			}
