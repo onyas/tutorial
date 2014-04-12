@@ -24,6 +24,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
@@ -138,9 +139,13 @@ public class SearcherUtil {
 
 	/**
 	 * 精确查询
-	 * @param field 要查找的域
-	 * @param name 域中要查找的名字
-	 * @param nums 查找的数量
+	 * 
+	 * @param field
+	 *            要查找的域
+	 * @param name
+	 *            域中要查找的名字
+	 * @param nums
+	 *            查找的数量
 	 */
 	public void searchByTerm(String field, String name, int nums) {
 		try {
@@ -157,10 +162,11 @@ public class SearcherUtil {
 				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
 				Document doc = searcher.doc(sd.doc);
 				// 8、根据Document对象获取需要的值
-				System.out.println("score:"+sd.score + "--" + sd.doc + "--id:" + doc.get("id") + "--from:"
-						+ doc.get("from") + "--name:" + doc.get("name") + "--content:"
-						+ doc.get("content") + "--attach:" + doc.get("attach") + "--date:"
-						+ doc.get("date"));
+				System.out.println("score:" + sd.score + "--" + sd.doc
+						+ "--id:" + doc.get("id") + "--from:" + doc.get("from")
+						+ "--name:" + doc.get("name") + "--content:"
+						+ doc.get("content") + "--attach:" + doc.get("attach")
+						+ "--date:" + doc.get("date"));
 			}
 			searcher.close();
 		} catch (CorruptIndexException e1) {
@@ -172,12 +178,18 @@ public class SearcherUtil {
 
 	/**
 	 * 范围搜索
-	 * @param field 要查找的域
-	 * @param lower 起始位置
-	 * @param upper 结束位置
-	 * @param nums 结果数量
+	 * 
+	 * @param field
+	 *            要查找的域
+	 * @param lower
+	 *            起始位置
+	 * @param upper
+	 *            结束位置
+	 * @param nums
+	 *            结果数量
 	 */
-	public void searchByTermRange(String field,String lower,String upper,int nums){
+	public void searchByTermRange(String field, String lower, String upper,
+			int nums) {
 		try {
 			// 3、根据IndexReader创建IndexSearcher
 			IndexSearcher searcher = getSearcher();
@@ -192,10 +204,11 @@ public class SearcherUtil {
 				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
 				Document doc = searcher.doc(sd.doc);
 				// 8、根据Document对象获取需要的值
-				System.out.println("score:"+sd.score + "--" + sd.doc + "--id:" + doc.get("id") + "--from:"
-						+ doc.get("from") + "--name:" + doc.get("name") + "--content:"
-						+ doc.get("content") + "--attach:" + doc.get("attach") + "--date:"
-						+ doc.get("date"));
+				System.out.println("score:" + sd.score + "--" + sd.doc
+						+ "--id:" + doc.get("id") + "--from:" + doc.get("from")
+						+ "--name:" + doc.get("name") + "--content:"
+						+ doc.get("content") + "--attach:" + doc.get("attach")
+						+ "--date:" + doc.get("date"));
 			}
 			searcher.close();
 		} catch (CorruptIndexException e1) {
@@ -204,22 +217,28 @@ public class SearcherUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * 数字范围的搜索
-	 * @param field 要查找的域
-	 * @param min 最小值
-	 * @param max 最大值
-	 * @param nums 查找的数量
+	 * 
+	 * @param field
+	 *            要查找的域
+	 * @param min
+	 *            最小值
+	 * @param max
+	 *            最大值
+	 * @param nums
+	 *            查找的数量
 	 */
-	public void searchByNumericRangeQuery(String field,int min,int max,int nums){
+	public void searchByNumericRangeQuery(String field, int min, int max,
+			int nums) {
 		try {
 			// 3、根据IndexReader创建IndexSearcher
 			IndexSearcher searcher = getSearcher();
 			// 4、创建搜索的Query
-			Query query = NumericRangeQuery.newIntRange(field, min, max, true,true);
-			
+			Query query = NumericRangeQuery.newIntRange(field, min, max, true,
+					true);
+
 			// 5、根据searcher搜索并且返回TopDocs
 			TopDocs tds = searcher.search(query, nums);
 			System.out.println("一共查询到:" + tds.totalHits);
@@ -229,10 +248,11 @@ public class SearcherUtil {
 				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
 				Document doc = searcher.doc(sd.doc);
 				// 8、根据Document对象获取需要的值
-				System.out.println("score:"+sd.score + "--" + sd.doc + "--id:" + doc.get("id") + "--from:"
-						+ doc.get("from") + "--name:" + doc.get("name") + "--content:"
-						+ doc.get("content") + "--attach:" + doc.get("attach") + "--date:"
-						+ doc.get("date"));
+				System.out.println("score:" + sd.score + "--" + sd.doc
+						+ "--id:" + doc.get("id") + "--from:" + doc.get("from")
+						+ "--name:" + doc.get("name") + "--content:"
+						+ doc.get("content") + "--attach:" + doc.get("attach")
+						+ "--date:" + doc.get("date"));
 			}
 			searcher.close();
 		} catch (CorruptIndexException e1) {
@@ -241,15 +261,18 @@ public class SearcherUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * 前缀搜索
-	 * @param field 要搜索的域
-	 * @param value 匹配的名字
-	 * @param nums 要查找的最大数量
+	 * 
+	 * @param field
+	 *            要搜索的域
+	 * @param value
+	 *            匹配的名字
+	 * @param nums
+	 *            要查找的最大数量
 	 */
-	public void searchByPrefix(String field,String value,int nums){
+	public void searchByPrefix(String field, String value, int nums) {
 		try {
 			// 3、根据IndexReader创建IndexSearcher
 			IndexSearcher searcher = getSearcher();
@@ -264,10 +287,11 @@ public class SearcherUtil {
 				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
 				Document doc = searcher.doc(sd.doc);
 				// 8、根据Document对象获取需要的值
-				System.out.println("score:"+sd.score + "--" + sd.doc + "--id:" + doc.get("id") + "--from:"
-						+ doc.get("from") + "--name:" + doc.get("name") + "--content:"
-						+ doc.get("content") + "--attach:" + doc.get("attach") + "--date:"
-						+ doc.get("date"));
+				System.out.println("score:" + sd.score + "--" + sd.doc
+						+ "--id:" + doc.get("id") + "--from:" + doc.get("from")
+						+ "--name:" + doc.get("name") + "--content:"
+						+ doc.get("content") + "--attach:" + doc.get("attach")
+						+ "--date:" + doc.get("date"));
 			}
 			searcher.close();
 		} catch (CorruptIndexException e1) {
@@ -276,7 +300,47 @@ public class SearcherUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * 通配符搜索
+	 * 
+	 * @param field
+	 *            要搜索的域
+	 * @param value
+	 *            匹配的名字
+	 * @param nums
+	 *            要查找的最大数量
+	 */
+	public void searchByWildCard(String field, String value, int nums) {
+		try {
+			// 3、根据IndexReader创建IndexSearcher
+			IndexSearcher searcher = getSearcher();
+			// 4、创建搜索的Query
+			// 在传入的value中可以使用?和*,？表示匹配一个字符，*表示匹配多个字符
+			Query query = new WildcardQuery(new Term(field, value));
+			// 5、根据searcher搜索并且返回TopDocs
+			TopDocs tds = searcher.search(query, nums);
+			System.out.println("一共查询到:" + tds.totalHits);
+			// 6、根据TopDocs获取ScoreDoc对象
+			ScoreDoc[] sds = tds.scoreDocs;
+			for (ScoreDoc sd : sds) {
+				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
+				Document doc = searcher.doc(sd.doc);
+				// 8、根据Document对象获取需要的值
+				System.out.println("score:" + sd.score + "--" + sd.doc
+						+ "--id:" + doc.get("id") + "--from:" + doc.get("from")
+						+ "--name:" + doc.get("name") + "--content:"
+						+ doc.get("content") + "--attach:" + doc.get("attach")
+						+ "--date:" + doc.get("date"));
+			}
+			searcher.close();
+		} catch (CorruptIndexException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void setDates() {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

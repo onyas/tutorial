@@ -37,4 +37,14 @@ public class TestSearcherUtil {
 		su.searchByPrefix("name","j", 10);
 		su.searchByPrefix("content","n", 10);
 	}
+	
+	@Test
+	public void testSearchByWildCard() {
+		//查找名字是以j开头的
+		su.searchByWildCard("name","j*", 10);
+		//查找是以qq.com结尾的email
+		su.searchByWildCard("from","*qq.com", 10);
+		//查找名字中有k的
+		su.searchByWildCard("name","*k*", 10);
+	}
 }
