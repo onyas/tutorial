@@ -31,4 +31,10 @@ public class TestSearcherUtil {
 	public void testNumericRangeQuery() {
 		su.searchByNumericRangeQuery("attach", 2,3, 10);
 	}
+	
+	@Test
+	public void testSearchByPrefix() {
+		su.searchByPrefix("name","j", 10);
+		su.searchByPrefix("content","n", 10);
+	}
 }
