@@ -57,4 +57,9 @@ public class TestSearcherUtil {
 	public void testSearchByPhrase() {
 		su.searchByPhrase(10);
 	}
+	
+	@Test
+	public void testSearchByFuzzy() {
+		su.searchByFuzzy("name", "lake", 10);
+	}
 }
