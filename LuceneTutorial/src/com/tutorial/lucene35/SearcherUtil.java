@@ -546,6 +546,55 @@ public class SearcherUtil {
 		}
 	}
 
+	/**
+	 * 得到上一页中的最后一个
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param query
+	 * @param searcher
+	 * @return
+	 * @throws Exception
+	 */
+	public ScoreDoc getLastScoreDoc(int pageIndex, int pageSize,Query query,IndexSearcher searcher) throws Exception{
+		if(pageIndex==1){
+			return null;
+		}
+		int results = (pageIndex-1)*pageSize;
+		TopDocs tds = searcher.search(query, results);
+		return tds.scoreDocs[results-1];
+	}
+	
+	/**
+	 * 分页查询
+	 * 
+	 * @param query
+	 *            查询条件
+	 * @param pageIndex
+	 *            第几页
+	 * @param pageSize
+	 *            每页多少条
+	 */
+	public void pageSearcher2(String query, int pageIndex, int pageSize) {
+		try {
+			Directory directory = FileDemoUtil.getDirectory();// 使用同一个directory
+			IndexSearcher searcher = getSearcher(directory);
+			QueryParser parser = new QueryParser(Version.LUCENE_35, "content",
+					new StandardAnalyzer(Version.LUCENE_35));
+			Query q = parser.parse(query);
+			ScoreDoc after = getLastScoreDoc(pageIndex, pageSize, q, searcher);
+			TopDocs tds = searcher.searchAfter(after, q, pageSize);
+			for(ScoreDoc sd:tds.scoreDocs){
+				Document doc = searcher.doc(sd.doc);
+				System.out.println(doc.get("path")+doc.get("name"));
+			}
+			searcher.close();
+		} catch (org.apache.lucene.queryParser.ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void setDates() {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

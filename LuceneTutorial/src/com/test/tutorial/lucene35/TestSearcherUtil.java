@@ -108,6 +108,8 @@ public class TestSearcherUtil {
 	
 	@Test
 	public void testpageSearcher1(){
-		su.pageSearcher1("String",4, 5);
+		su.pageSearcher1("String",3, 5);
+		System.out.println("--------");
+		su.pageSearcher1("String",3, 5);
 	}
 }
