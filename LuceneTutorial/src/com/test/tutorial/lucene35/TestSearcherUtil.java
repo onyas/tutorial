@@ -26,4 +26,9 @@ public class TestSearcherUtil {
 		//结果为0，表示不支持数字范围的查找
 		su.searchByTermRange("attach", "1", "5", 10);
 	}
+	
+	@Test
+	public void testNumericRangeQuery() {
+		su.searchByNumericRangeQuery("attach", 2,3, 10);
+	}
 }

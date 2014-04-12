@@ -17,6 +17,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
@@ -98,7 +99,7 @@ public class SearcherUtil {
 						Field.Index.NOT_ANALYZED));
 				doc.add(new Field("content", contents[i], Field.Store.NO,
 						Field.Index.ANALYZED));
-				doc.add(new NumericField("attach", Field.Store.YES, false)
+				doc.add(new NumericField("attach", Field.Store.YES, true)
 						.setIntValue(attachs[i]));
 				// 存储日期
 				doc.add(new NumericField("date", Field.Store.YES, false)
@@ -181,6 +182,43 @@ public class SearcherUtil {
 			IndexSearcher searcher = getSearcher();
 			// 4、创建搜索的Query
 			Query query = new TermRangeQuery(field, lower, upper, true, true);
+			// 5、根据searcher搜索并且返回TopDocs
+			TopDocs tds = searcher.search(query, nums);
+			System.out.println("一共查询到:" + tds.totalHits);
+			// 6、根据TopDocs获取ScoreDoc对象
+			ScoreDoc[] sds = tds.scoreDocs;
+			for (ScoreDoc sd : sds) {
+				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
+				Document doc = searcher.doc(sd.doc);
+				// 8、根据Document对象获取需要的值
+				System.out.println("score:"+sd.score + "--" + sd.doc + "--id:" + doc.get("id") + "--from:"
+						+ doc.get("from") + "--name:" + doc.get("name") + "--content:"
+						+ doc.get("content") + "--attach:" + doc.get("attach") + "--date:"
+						+ doc.get("date"));
+			}
+			searcher.close();
+		} catch (CorruptIndexException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * 数字范围的搜索
+	 * @param field 要查找的域
+	 * @param min 最小值
+	 * @param max 最大值
+	 * @param nums 查找的数量
+	 */
+	public void searchByNumericRangeQuery(String field,int min,int max,int nums){
+		try {
+			// 3、根据IndexReader创建IndexSearcher
+			IndexSearcher searcher = getSearcher();
+			// 4、创建搜索的Query
+			Query query = NumericRangeQuery.newIntRange(field, min, max, true,true);
+			
 			// 5、根据searcher搜索并且返回TopDocs
 			TopDocs tds = searcher.search(query, nums);
 			System.out.println("一共查询到:" + tds.totalHits);
