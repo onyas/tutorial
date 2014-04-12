@@ -52,4 +52,9 @@ public class TestSearcherUtil {
 	public void testSearchByBoolean() {
 		su.searchByBooleanQuery(10);
 	}
+	
+	@Test
+	public void testSearchByPhrase() {
+		su.searchByPhrase(10);
+	}
 }
