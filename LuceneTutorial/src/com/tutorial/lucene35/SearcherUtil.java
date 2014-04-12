@@ -16,6 +16,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PrefixQuery;
@@ -25,6 +26,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
@@ -318,6 +320,43 @@ public class SearcherUtil {
 			// 4、创建搜索的Query
 			// 在传入的value中可以使用?和*,？表示匹配一个字符，*表示匹配多个字符
 			Query query = new WildcardQuery(new Term(field, value));
+			// 5、根据searcher搜索并且返回TopDocs
+			TopDocs tds = searcher.search(query, nums);
+			System.out.println("一共查询到:" + tds.totalHits);
+			// 6、根据TopDocs获取ScoreDoc对象
+			ScoreDoc[] sds = tds.scoreDocs;
+			for (ScoreDoc sd : sds) {
+				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
+				Document doc = searcher.doc(sd.doc);
+				// 8、根据Document对象获取需要的值
+				System.out.println("score:" + sd.score + "--" + sd.doc
+						+ "--id:" + doc.get("id") + "--from:" + doc.get("from")
+						+ "--name:" + doc.get("name") + "--content:"
+						+ doc.get("content") + "--attach:" + doc.get("attach")
+						+ "--date:" + doc.get("date"));
+			}
+			searcher.close();
+		} catch (CorruptIndexException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void searchByBooleanQuery(int nums) {
+		try {
+			// 3、根据IndexReader创建IndexSearcher
+			IndexSearcher searcher = getSearcher();
+			// 4、创建搜索的Query
+			/**
+			 * BooleanQuery可以连接多个子查询
+			 * Occur.MUST 表示必须出现
+			 * Occur.SHOULD 表示可以出现
+			 * Occur.MUST_NOT 不能出现
+			 */
+			BooleanQuery query = new BooleanQuery();
+			query.add(new TermQuery(new Term("name", "zhangsan")), Occur.MUST);
+			query.add(new TermQuery(new Term("content", "nice")), Occur.SHOULD);
 			// 5、根据searcher搜索并且返回TopDocs
 			TopDocs tds = searcher.search(query, nums);
 			System.out.println("一共查询到:" + tds.totalHits);

@@ -47,4 +47,9 @@ public class TestSearcherUtil {
 		//查找名字中有k的
 		su.searchByWildCard("name","*k*", 10);
 	}
+	
+	@Test
+	public void testSearchByBoolean() {
+		su.searchByBooleanQuery(10);
+	}
 }
