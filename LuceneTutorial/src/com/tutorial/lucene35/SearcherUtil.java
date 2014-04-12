@@ -17,8 +17,10 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
@@ -166,6 +168,40 @@ public class SearcherUtil {
 		}
 	}
 
+	/**
+	 * 范围搜索
+	 * @param field 要查找的域
+	 * @param lower 起始位置
+	 * @param upper 结束位置
+	 * @param nums 结果数量
+	 */
+	public void searchByTermRange(String field,String lower,String upper,int nums){
+		try {
+			// 3、根据IndexReader创建IndexSearcher
+			IndexSearcher searcher = getSearcher();
+			// 4、创建搜索的Query
+			Query query = new TermRangeQuery(field, lower, upper, true, true);
+			// 5、根据searcher搜索并且返回TopDocs
+			TopDocs tds = searcher.search(query, nums);
+			System.out.println("一共查询到:" + tds.totalHits);
+			// 6、根据TopDocs获取ScoreDoc对象
+			ScoreDoc[] sds = tds.scoreDocs;
+			for (ScoreDoc sd : sds) {
+				// 7、根据searcher和ScoreDoc对象获取具体的Document对象
+				Document doc = searcher.doc(sd.doc);
+				// 8、根据Document对象获取需要的值
+				System.out.println("score:"+sd.score + "--" + sd.doc + "--id:" + doc.get("id") + "--from:"
+						+ doc.get("from") + "--name:" + doc.get("name") + "--content:"
+						+ doc.get("content") + "--attach:" + doc.get("attach") + "--date:"
+						+ doc.get("date"));
+			}
+			searcher.close();
+		} catch (CorruptIndexException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	private void setDates() {
