@@ -9,6 +9,7 @@ import org.apache.lucene.util.Version;
 import org.junit.Test;
 
 import com.tutorial.lucene35.AnalyzerUtil;
+import com.tutorial.lucene35.MyStopAnalyzer;
 
 public class TestAnalyzerUtil {
 
@@ -41,5 +42,15 @@ public class TestAnalyzerUtil {
 		AnalyzerUtil.displayAllToken(str, a2);
 		AnalyzerUtil.displayAllToken(str, a3);
 		AnalyzerUtil.displayAllToken(str, a4);
+	}
+	
+	@Test
+	public void testMyStopAnalyzer(){
+		Analyzer a1 = new MyStopAnalyzer(new String[]{"is","a","hello"});
+		Analyzer a2 = new StopAnalyzer(Version.LUCENE_35);
+		
+		String str = "hello this is just a test";
+		AnalyzerUtil.displayToken(str, a1);
+		AnalyzerUtil.displayToken(str, a2);
 	}
 }
