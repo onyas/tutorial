@@ -31,6 +31,8 @@ import com.chenlb.mmseg4j.analysis.MaxWordAnalyzer;
 import com.tutorial.lucene35.AnalyzerUtil;
 import com.tutorial.lucene35.MyStopAnalyzer;
 import com.tutorial.lucene35.MySynonymAnalyzer;
+import com.tutorial.lucene35.SimpleSynonymContext;
+import com.tutorial.lucene35.SimpleSynonymContext2;
 
 public class TestAnalyzerUtil {
 
@@ -76,7 +78,7 @@ public class TestAnalyzerUtil {
 
 	@Test
 	public void testMySynonymAnalyzer() {
-		Analyzer a1 = new MySynonymAnalyzer();
+		Analyzer a1 = new MySynonymAnalyzer(new SimpleSynonymContext());
 
 		String str = "我来自中国福建福州";
 		AnalyzerUtil.displayToken(str, a1);
@@ -100,7 +102,8 @@ public class TestAnalyzerUtil {
 	@Test
 	public void testBaseSynonymAnalyzer() {
 		try {
-			Analyzer a1 = new MySynonymAnalyzer();
+			//同过修改SynonymContext的类型来更改同义词的词库
+			Analyzer a1 = new MySynonymAnalyzer(new SimpleSynonymContext());
 			String txt = "我来自中国福建福州";
 			Directory dir = new RAMDirectory();
 			IndexWriter writer = new IndexWriter(dir, new IndexWriterConfig(
@@ -113,7 +116,7 @@ public class TestAnalyzerUtil {
 			IndexSearcher searcher = new IndexSearcher(IndexReader.open(dir));
 			// 可以改变搜索的内容，比如"大陆"，"天朝"等
 			TopDocs tds = searcher.search(new TermQuery(new Term("content",
-					"天朝")), 20);
+					"咱")), 20);
 			ScoreDoc[] sds = tds.scoreDocs;
 			for (ScoreDoc sd : sds) {
 				Document document = searcher.doc(sd.doc);

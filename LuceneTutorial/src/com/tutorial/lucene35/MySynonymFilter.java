@@ -17,12 +17,14 @@ public class MySynonymFilter extends TokenFilter {
 	private PositionIncrementAttribute pia = null;
 	private Stack<String> synonyms=null;
 	private AttributeSource.State current;
+	private SynonymContext scontext;
 
-	protected MySynonymFilter(TokenStream input) {
+	protected MySynonymFilter(TokenStream input,SynonymContext ctx) {
 		super(input);
 		cta = this.addAttribute(CharTermAttribute.class);
 		pia = this.addAttribute(PositionIncrementAttribute.class);
 		synonyms = new Stack<String>();
+		scontext  = ctx;
 	}
 
 	@Override
@@ -56,10 +58,9 @@ public class MySynonymFilter extends TokenFilter {
 	 * @return
 	 */
 	private boolean getSynonymWords(String name){
-		Map<String,String[]> maps = new HashMap<String,String[]>();
-		maps.put("中国",new String[]{"大陆","天朝"});
-		maps.put("我",new String[]{"咱","俺"});
-		String[] sws = maps.get(name);
+		
+		
+		String[] sws = scontext.getSynonym(name);
 		if(sws!=null){
 			for(String s:sws){
 				synonyms.push(s);

@@ -11,10 +11,16 @@ import com.chenlb.mmseg4j.analysis.MMSegTokenizer;
 
 public class MySynonymAnalyzer extends Analyzer {
 
+	private SynonymContext ctx;
+	
+	public MySynonymAnalyzer(SynonymContext context) {
+		ctx = context;
+	}
+	
 	@Override
 	public TokenStream tokenStream(String fieldName, Reader reader) {
 		Dictionary dic = Dictionary.getInstance("F:\\OpenSource\\Java\\lucene\\mmseg4j-1.8.3\\data");
-		return new MySynonymFilter(new MMSegTokenizer(new MaxWordSeg(dic), reader));
+		return new MySynonymFilter(new MMSegTokenizer(new MaxWordSeg(dic), reader),ctx);
 	}
 
 }
