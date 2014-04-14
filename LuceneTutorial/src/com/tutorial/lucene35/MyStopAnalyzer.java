@@ -20,7 +20,7 @@ public class MyStopAnalyzer extends Analyzer {
 	public MyStopAnalyzer(String[] sws) {
 		// 自动将字符串数组转换成set
 		stops = StopFilter.makeStopSet(Version.LUCENE_35, sws, true);
-		// 把默认停用诩加入自定义的停用词集合中
+		// 把默认停用诩加入自定义的停用词集合中,可以不加
 		stops.addAll(StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 	}
 

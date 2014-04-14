@@ -8,6 +8,8 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.util.Version;
 import org.junit.Test;
 
+import com.chenlb.mmseg4j.analysis.ComplexAnalyzer;
+import com.chenlb.mmseg4j.analysis.MaxWordAnalyzer;
 import com.tutorial.lucene35.AnalyzerUtil;
 import com.tutorial.lucene35.MyStopAnalyzer;
 
@@ -21,7 +23,7 @@ public class TestAnalyzerUtil {
 		Analyzer a4 = new WhitespaceAnalyzer(Version.LUCENE_35);
 		
 		String str = "hello this is just a test,so dont't be so serroul,ok?";
-//		String str ="ÕâÖ»ÊÇÒ»¸ö²âÊÔ";
+//		String str ="è¿™åªæ˜¯ä¸€ä¸ªæµ‹è¯•";
 		AnalyzerUtil.displayToken(str, a1);
 		AnalyzerUtil.displayToken(str, a2);
 		AnalyzerUtil.displayToken(str, a3);
@@ -37,7 +39,7 @@ public class TestAnalyzerUtil {
 		Analyzer a4 = new WhitespaceAnalyzer(Version.LUCENE_35);
 		
 		String str = "hello this is just a test";
-//		String str ="ÕâÖ»ÊÇÒ»¸ö²âÊÔ";
+//		String str ="è¿™åªæ˜¯ä¸€ä¸ªæµ‹è¯•";
 		AnalyzerUtil.displayAllToken(str, a1);
 		AnalyzerUtil.displayAllToken(str, a2);
 		AnalyzerUtil.displayAllToken(str, a3);
@@ -52,5 +54,18 @@ public class TestAnalyzerUtil {
 		String str = "hello this is just a test";
 		AnalyzerUtil.displayToken(str, a1);
 		AnalyzerUtil.displayToken(str, a2);
+	}
+	
+	@Test
+	public void testMmseg(){
+		Analyzer a1 = new com.chenlb.mmseg4j.analysis.SimpleAnalyzer();
+		Analyzer a2 = new ComplexAnalyzer();
+		Analyzer a3 = new MaxWordAnalyzer();
+		
+		String str = "é˜¿é‡Œäº‘äº§å“ä¸“å®¶æœ±ä»¥å†›è§£æç§»åŠ¨åº”ç”¨çš„æ¶æ„ç‰¹æ€§";
+		
+		AnalyzerUtil.displayToken(str,a1);
+		AnalyzerUtil.displayToken(str,a2);
+		AnalyzerUtil.displayToken(str,a3);
 	}
 }
