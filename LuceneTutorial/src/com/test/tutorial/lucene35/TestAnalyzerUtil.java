@@ -9,6 +9,7 @@ import org.apache.lucene.util.Version;
 import org.junit.Test;
 
 import com.chenlb.mmseg4j.analysis.ComplexAnalyzer;
+import com.chenlb.mmseg4j.analysis.MMSegAnalyzer;
 import com.chenlb.mmseg4j.analysis.MaxWordAnalyzer;
 import com.tutorial.lucene35.AnalyzerUtil;
 import com.tutorial.lucene35.MyStopAnalyzer;
@@ -61,11 +62,13 @@ public class TestAnalyzerUtil {
 		Analyzer a1 = new com.chenlb.mmseg4j.analysis.SimpleAnalyzer();
 		Analyzer a2 = new ComplexAnalyzer();
 		Analyzer a3 = new MaxWordAnalyzer();
+		Analyzer a4 = new MMSegAnalyzer();
 		
 		String str = "阿里云产品专家朱以军解析移动应用的架构特性";
 		
 		AnalyzerUtil.displayToken(str,a1);
 		AnalyzerUtil.displayToken(str,a2);
 		AnalyzerUtil.displayToken(str,a3);
+		AnalyzerUtil.displayToken(str, a4);
 	}
 }
