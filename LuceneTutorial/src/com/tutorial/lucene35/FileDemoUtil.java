@@ -33,13 +33,16 @@ public class FileDemoUtil {
 	}
 
 	/**
-	 * ÎªÎÄ¼þ½øÐÐË÷Òý
+	 * Îªï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
-	public static void indexFiles() {
+	public static void indexFiles(boolean delAll) {
 		IndexWriter writer = null;
 		try {
 			writer = new IndexWriter(directory, new IndexWriterConfig(
 					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
+			if(delAll){
+				writer.deleteAll();
+			}
 			File dir = new File("F:/Test/lucene/txt");
 			Document doc = null;
 			for (File f : dir.listFiles()) {
@@ -49,10 +52,10 @@ public class FileDemoUtil {
 						Field.Index.NOT_ANALYZED));
 				doc.add(new Field("name", f.getName(), Field.Store.YES,
 						Field.Index.NOT_ANALYZED));
-				doc.add(new NumericField("time", Field.Store.YES, false)
+				doc.add(new NumericField("time", Field.Store.YES, true)
 						.setLongValue(f.lastModified()));
-				doc.add(new NumericField("size", Field.Store.YES, false)
-						.setLongValue(f.length() / 1024));
+				doc.add(new NumericField("size", Field.Store.YES, true)
+						.setLongValue(f.length()));
 				writer.addDocument(doc);
 			}
 		} catch (CorruptIndexException e) {

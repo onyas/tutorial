@@ -3,6 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="lib/junit-4.7.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-3.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-3.5.0.jar" sourcepath="F:/OpenSource/Java/lucene/lucene-3.5.0-src"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.4.jar" sourcepath="F:/OpenSource/Java/jar/commons/commons-io-2.4/commons-io-2.4-sources.jar"/>
+	<classpathentry kind="lib" path="lib/mmseg4j-core-1.8.3-with-dic.jar" sourcepath="F:/OpenSource/Java/lucene/mmseg4j-1.8.3/src"/>
+	<classpathentry kind="lib" path="lib/mmseg4j-analysis-1.8.3.jar" sourcepath="F:/OpenSource/Java/lucene/mmseg4j-1.8.3/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

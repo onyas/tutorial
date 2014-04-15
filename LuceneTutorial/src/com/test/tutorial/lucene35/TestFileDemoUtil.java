@@ -27,7 +27,7 @@ public class TestFileDemoUtil {
 	
 	@Test
 	public void testIndexfile(){
-		FileDemoUtil.indexFiles();
+		FileDemoUtil.indexFiles(true);
 	}
 
 }
