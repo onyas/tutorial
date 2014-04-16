@@ -69,10 +69,9 @@ public class SearcherSort {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			for (ScoreDoc sd : sds) {
 				Document doc = searcher.doc(sd.doc);
-				System.out.println(doc.get("time"));
-				System.out.println(sd.doc + ":(" + sd.score + ")"
-						+ doc.get("path") + "-->" + doc.get("name") + "-->"
-						+ doc.get("size") + "-->"
+				System.out.println(sd.doc + ":(" + sd.score + ")-->"
+						+ doc.get("score") + doc.get("path") + "-->"
+						+ doc.get("name") + "-->" + doc.get("size") + "-->"
 						+ sdf.format(new Date(Long.valueOf(doc.get("time")))));
 			}
 			searcher.close();
@@ -86,9 +85,9 @@ public class SearcherSort {
 
 	}
 
-	
 	/**
 	 * 根据过滤器进行搜索
+	 * 
 	 * @param queryStr
 	 * @param filter
 	 */
@@ -101,7 +100,7 @@ public class SearcherSort {
 			Query query = parser.parse(queryStr);
 			TopDocs tds = null;
 			if (filter != null) {
-				tds = searcher.search(query, filter,50);
+				tds = searcher.search(query, filter, 50);
 			} else {
 				tds = searcher.search(query, 50);
 			}
@@ -124,6 +123,5 @@ public class SearcherSort {
 		}
 
 	}
-	
-	
+
 }

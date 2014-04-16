@@ -3,6 +3,7 @@ package com.tutorial.lucene35;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Random;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -40,12 +41,14 @@ public class FileDemoUtil {
 		try {
 			writer = new IndexWriter(directory, new IndexWriterConfig(
 					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
-			if(delAll){
+			if (delAll) {
 				writer.deleteAll();
 			}
 			File dir = new File("F:/Test/lucene/txt");
 			Document doc = null;
+			Random random = new Random();
 			for (File f : dir.listFiles()) {
+				int score = random.nextInt(200);
 				doc = new Document();
 				doc.add(new Field("content", new FileReader(f)));
 				doc.add(new Field("path", f.getAbsolutePath(), Field.Store.YES,
@@ -56,6 +59,8 @@ public class FileDemoUtil {
 						.setLongValue(f.lastModified()));
 				doc.add(new NumericField("size", Field.Store.YES, true)
 						.setLongValue(f.length()));
+				doc.add(new NumericField("score", Field.Store.YES, true)
+						.setIntValue(score));
 				writer.addDocument(doc);
 			}
 		} catch (CorruptIndexException e) {
