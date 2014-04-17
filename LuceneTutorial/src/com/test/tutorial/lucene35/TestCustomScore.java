@@ -12,4 +12,10 @@ public class TestCustomScore {
 		cs.searchByCustomScore();
 	}
 	
+	
+	@Test
+	public void searchByFilenameScore(){
+		CustomScore cs = new CustomScore();
+		cs.searchByFilenameScore();
+	}
 }
