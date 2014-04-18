@@ -9,8 +9,10 @@ public class TestCustomQueryParser {
 	@Test
 	public void testQuery(){
 		CustomQueryParseUtil cp = new CustomQueryParseUtil();
-		cp.search("java?");
-		cp.search("java~");
+//		cp.search("java?");
+//		cp.search("java~");
+//		cp.search("size:[1000 TO 2000]");
+//		cp.search("name:[a TO h]");
 	}
 	
 }
