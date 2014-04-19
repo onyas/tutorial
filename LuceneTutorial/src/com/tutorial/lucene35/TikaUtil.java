@@ -17,6 +17,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.util.Version;
+import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -36,8 +37,10 @@ public class TikaUtil {
 					.open(new File("F:\\Test\\lucene\\file2"));
 			IndexWriter writer = new IndexWriter(dir, new IndexWriterConfig(
 					Version.LUCENE_35, new StandardAnalyzer(Version.LUCENE_35)));
+			writer.deleteAll();
 			Document doc = new Document();
-			doc.add(new Field("content", new FileReader(f)));
+//			doc.add(new Field("content", new FileReader(f)));
+			doc.add(new Field("content", new Tika().parse(f)));
 			writer.addDocument(doc);
 			writer.close();
 		} catch (CorruptIndexException e) {
@@ -61,8 +64,8 @@ public class TikaUtil {
 			ParseContext context = new ParseContext();
 			context.set(Parser.class, parser);
 			parser.parse(is, handler, metadata, context);
-			for(String name:metadata.names()){
-				System.out.println(name+":"+metadata.get(name));
+			for (String name : metadata.names()) {
+				System.out.println(name + ":" + metadata.get(name));
 			}
 			return handler.toString();
 		} catch (FileNotFoundException e) {
@@ -86,4 +89,22 @@ public class TikaUtil {
 		return null;
 	}
 
+	public String fileToTextEasyway(File f) {
+		Tika tika = new Tika();
+		Metadata metadata = new Metadata();
+		String str = null;
+		try {
+			str = tika.parseToString(new FileInputStream(f), metadata);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TikaException e) {
+			e.printStackTrace();
+		}
+		for (String name : metadata.names()) {
+			System.out.println(name + ":" + metadata.get(name));
+		}
+		return str;
+	}
 }

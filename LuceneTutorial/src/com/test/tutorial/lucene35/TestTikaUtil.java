@@ -13,11 +13,19 @@ public class TestTikaUtil {
 		TikaUtil tu = new TikaUtil();
 		tu.index();
 	}
-	
+
 	@Test
-	public void testFile2Text(){
+	public void testFile2Text() {
 		TikaUtil tu = new TikaUtil();
-		System.out.println(tu.file2Text(new File("F:\\Test\\lucene\\tikaexample\\招聘试题.doc")));
+		System.out.println(tu.file2Text(new File(
+				"F:\\Test\\lucene\\tikaexample\\招聘试题.doc")));
+	}
+
+	@Test
+	public void testEasyway() {
+		TikaUtil tu = new TikaUtil();
+		System.out.println(tu.file2Text(new File(
+				"F:\\Test\\lucene\\tikaexample\\招聘试题.doc")));
 	}
 
 }

@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar" sourcepath="F:/OpenSource/Java/jar/commons/commons-io-2.4/commons-io-2.4-sources.jar"/>
 	<classpathentry kind="lib" path="lib/mmseg4j-core-1.8.3-with-dic.jar" sourcepath="F:/OpenSource/Java/lucene/mmseg4j-1.8.3/src"/>
 	<classpathentry kind="lib" path="lib/mmseg4j-analysis-1.8.3.jar" sourcepath="F:/OpenSource/Java/lucene/mmseg4j-1.8.3/src"/>
+	<classpathentry kind="lib" path="lib/tika-app-1.5.jar" sourcepath="F:/OpenSource/Java/tika"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
