@@ -47,9 +47,12 @@ public class FileDemoUtil {
 			File dir = new File("F:/Test/lucene/txt");
 			Document doc = null;
 			Random random = new Random();
+			int index = 0;
 			for (File f : dir.listFiles()) {
 				int score = random.nextInt(200);
 				doc = new Document();
+				doc.add(new Field("id", String.valueOf(index++),
+						Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
 				doc.add(new Field("content", new FileReader(f)));
 				doc.add(new Field("path", f.getAbsolutePath(), Field.Store.YES,
 						Field.Index.NOT_ANALYZED));
