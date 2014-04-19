@@ -9,7 +9,7 @@ public class TestMyFilter {
 	@Test
 	public void testSearch(){
 		MyCustomFilter mcf = new MyCustomFilter();
-		mcf.search("java");
+		mcf.search();
 	}
 	
 }

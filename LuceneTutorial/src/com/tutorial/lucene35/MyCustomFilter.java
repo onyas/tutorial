@@ -13,13 +13,29 @@ import org.apache.lucene.search.TopDocs;
 
 public class MyCustomFilter {
 
-	public void search(String value) {
+	public void search() {
 
 		try {
 			IndexSearcher searcher = new IndexSearcher(IndexReader
 					.open(FileDemoUtil.getDirectory()));
-			Query query = new TermQuery(new Term("content", value));
-			TopDocs tds = searcher.search(query, new MyIdFilter(), 100);
+			Query query = new TermQuery(new Term("content", "java"));
+			TopDocs tds = searcher.search(query, new MyFilter(new FilterAccessor() {
+				
+				@Override
+				public boolean set() {
+					return false;
+				}
+				
+				@Override
+				public String[] getValues() {
+					return new String[]{"54"};
+				}
+				
+				@Override
+				public String getField() {
+					return "id";
+				}
+			}), 100);
 			ScoreDoc[] sds = tds.scoreDocs;
 			for (ScoreDoc sd : sds) {
 				Document doc = searcher.doc(sd.doc);
