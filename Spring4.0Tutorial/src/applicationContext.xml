@@ -31,7 +31,7 @@
 	</bean>
 	
 	<bean id="car2" class="com.tutorial.spring4.Car">
-		<constructor-arg value="Audi" type="java.lang.String"></constructor-arg>
+		<constructor-arg value="BenChi" type="java.lang.String"></constructor-arg>
 		<constructor-arg value="BeiJing" type="java.lang.String"></constructor-arg>
 		<constructor-arg value="240" type="int"></constructor-arg>
 	</bean>
@@ -52,6 +52,30 @@
 				<ref bean="car"/>
 				<ref bean="car2"/>
 			</list>
+		</property>
+	</bean>
+	
+	<!-- 配置map属性值 -->
+	<bean id="carStore2" class="com.tutorial.spring4.CarStore2">
+		<property name="name" value="BestCarStore"></property>
+		<property name="cars">
+			<!-- 使用map节点，及entry来进行配置 -->
+			<map>
+				<entry key="Audi" value-ref="car"></entry>
+				<entry key="BenChi" value-ref="car2"></entry>
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 配置Properties -->
+	<bean id="dataSource" class="com.tutorial.spring4.DataSource">
+		<property name="properties">
+			<props>
+				<prop key="username">root</prop>
+				<prop key="password">1234</prop>
+				<prop key="jdbcUrl">jdbc:mysql//localhost</prop>
+				<prop key="driverClass">com.mysql.jdbc.Driver</prop>
+			</props>
 		</property>
 	</bean>
 	
