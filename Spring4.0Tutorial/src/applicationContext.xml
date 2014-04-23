@@ -13,4 +13,20 @@
 		<property name="name" value="Spring"></property>
 	</bean>
 
+
+	<!-- 
+		有两种注入方式，前面用的是属性注入，这个例子用的是构造器注入
+		并且通过index,和type属性来指定参数的顺序，并以此来区分重载的构造器
+	 -->
+	<bean id="car" class="com.tutorial.spring4.Car">
+		<constructor-arg value="Audi" index="0"></constructor-arg>
+		<constructor-arg value="BeiJing" index="1"></constructor-arg>
+		<constructor-arg value="400000.0" type="double"></constructor-arg>
+	</bean>
+	
+	<bean id="car2" class="com.tutorial.spring4.Car">
+		<constructor-arg value="Audi" type="java.lang.String"></constructor-arg>
+		<constructor-arg value="BeiJing" type="java.lang.String"></constructor-arg>
+		<constructor-arg value="240" type="int"></constructor-arg>
+	</bean>
 </beans>

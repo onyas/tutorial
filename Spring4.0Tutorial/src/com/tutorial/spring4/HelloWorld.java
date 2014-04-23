@@ -6,12 +6,12 @@ public class HelloWorld {
 	
 	
 	public HelloWorld() {
-		System.out.println("Constuctor...");
+		System.out.println("HelloWorld.java  Constuctor...");
 	}
 	
 	public void setName(String name) {
 		this.name = name;
-		System.out.println("Name:"+name);
+		System.out.println("HelloWorld.java  Name:"+name);
 	}
 	
 	public void sayHello(){
