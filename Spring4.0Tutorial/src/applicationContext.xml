@@ -4,7 +4,11 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-   <!-- beans -->
+   	<!-- 
+		配置bean
+		class:bean的全类名，通过反射的方式在IOC容器中创建Bean，所以要求Bean中必须有无参的构造器
+		id: 标识容器中的bean,是唯一的
+	 -->
 	<bean id="helloworld" class="com.tutorial.spring4.HelloWorld">
 		<property name="name" value="Spring"></property>
 	</bean>

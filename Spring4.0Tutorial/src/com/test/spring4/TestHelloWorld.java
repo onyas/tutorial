@@ -17,9 +17,16 @@ public class TestHelloWorld {
 
 	@Test
 	public void testSayHelloWithSping1() {
+		/**
+		 * 在SpringIOC容器读取Bean配置创建Bean实例之前，必须对它进行实例化，
+		 * 只有在容器实例化后，才可以从IOC容器里获取Bean的实例并使用
+		 */
+		//1、创建Spring的IOC容器对象
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"applicationContext.xml");
+		//2、从IOC容器中获取Bean实例
 		HelloWorld hw = (HelloWorld) context.getBean("helloworld");
+		//3、调用sayHello方法
 		hw.sayHello();
 	}
 	
