@@ -21,6 +21,10 @@ public class Car {
 		this.speed = speed;
 	}
 
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+	
 	@Override
 	public String toString() {
 		return "Car [brand=" + brand + ", corp=" + corp + ", price=" + price

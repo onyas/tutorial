@@ -44,4 +44,15 @@
 		<property name="car.speed" value="260"></property>
 	</bean>
 	
+	<bean id="carStore" class="com.tutorial.spring4.CarStore">
+		<property name="name" value="BestCarStore"></property>
+		<property name="cars">
+			<!-- 使用list节点为List类型的属性赋值 ,数组也用list节点-->
+			<list>
+				<ref bean="car"/>
+				<ref bean="car2"/>
+			</list>
+		</property>
+	</bean>
+	
 </beans>
