@@ -20,7 +20,13 @@
 	 -->
 	<bean id="car" class="com.tutorial.spring4.Car">
 		<constructor-arg value="Audi" index="0"></constructor-arg>
-		<constructor-arg value="BeiJing" index="1"></constructor-arg>
+		<!-- 
+			如果字面值包含特殊字符可以用<![CDATA[]]>包装起来 
+			属性值可以通过value元素进行配置		
+		-->
+		<constructor-arg index="1">
+			<value><![CDATA[<ShangHai>]]></value>
+		</constructor-arg>
 		<constructor-arg value="400000.0" type="double"></constructor-arg>
 	</bean>
 	
@@ -29,4 +35,13 @@
 		<constructor-arg value="BeiJing" type="java.lang.String"></constructor-arg>
 		<constructor-arg value="240" type="int"></constructor-arg>
 	</bean>
+	
+	<bean id="person" class="com.tutorial.spring4.Person">
+		<property name="name" value="Tom"></property>
+		<property name="age" value="23"></property>
+		<property name="car" ref="car"></property>
+		<!-- 为级联属性赋值，注意，car需要先初始化后才可以为级联属性进行赋值，不然会有异常，和struts2不同 -->
+		<property name="car.speed" value="260"></property>
+	</bean>
+	
 </beans>
