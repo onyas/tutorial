@@ -15,6 +15,9 @@ public class TestCarStore {
 		
 		CarStore cs = (CarStore) ctx.getBean("carStore");
 		System.out.println(cs);
+		
+		cs = (CarStore) ctx.getBean("cswithP");
+		System.out.println(cs);
 	}
 
 }

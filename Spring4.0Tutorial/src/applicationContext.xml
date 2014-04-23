@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:p="http://www.springframework.org/schema/p"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"> 
 
    	<!-- 
 		配置bean
@@ -48,10 +51,14 @@
 		<property name="name" value="BestCarStore"></property>
 		<property name="cars">
 			<!-- 使用list节点为List类型的属性赋值 ,数组也用list节点-->
+			<!--
 			<list>
 				<ref bean="car"/>
 				<ref bean="car2"/>
 			</list>
+			-->
+			<!-- 引用util schema中定义的Bean -->
+			<ref bean="cars"/>
 		</property>
 	</bean>
 	
@@ -79,4 +86,21 @@
 		</property>
 	</bean>
 	
+	<!-- 
+		使用util schema定义集合，这样，就可以在不同的Bean之间共享这个集合 
+		在最上面导入util的命名空间
+		xmlns:util="http://www.springframework.org/schema/util"
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+	-->
+	<util:list id="cars">
+		<ref bean="car"/>
+		<ref bean="car2"/>
+	</util:list>
+	
+	<!-- 
+		使用P命名空间，引入P命名空间 xmlns:p="http://www.springframework.org/schema/p"
+		进一步简化了基于xml的配置
+	 -->
+	 <bean id="cswithP" class="com.tutorial.spring4.CarStore" p:name="Better" p:cars-ref="cars">
+	</bean>
 </beans>
