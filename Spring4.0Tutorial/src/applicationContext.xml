@@ -3,9 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"> 
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        "> 
 
    	<!-- 
 		配置bean
@@ -103,4 +106,39 @@
 	 -->
 	 <bean id="cswithP" class="com.tutorial.spring4.CarStore" p:name="Better" p:cars-ref="cars">
 	</bean>
+	<!-- 
+		Bean中有一个autowire属性，用来指定自动装配的方式
+		byName 根据Bean的名字和当前bean的setter风格的属性名进行自动装配，若有匹配的，则进行装配，否则不装配
+		byType 根据Bean的类型和当前Bean的属性的类型进行自动装配，若IOC容器中有1个以上的类型匹配，则抛异常
+	 	也有缺点：
+	 	1、不灵活，因为它会装配所有的属性，如果想要装配个别的属性时，就不适用
+	 	2、autowrie要么根据类型匹配，要么根据名称匹配，不能两者混合使用
+	 -->
+	 <!-- 
+	 	Bean与Bean之间的关系主要有继承(parent)和依赖(depends-on)
+	 	继承(parent):可以继承父类Bean的属性，如果Bean的abstruct为true,那么不能被实例化
+	 	依赖(depends-on)：表示当前Bean的初始化依赖另外的Bean，如果依赖多个Bean，可以用逗号或空格分开多个Bean
+	  -->
+	  
+	  <!-- 
+	  	使用Bean的scope属性来配置Bean的作用域
+	  	singleton:默认值，容器初始化时创建bean实例，在整个容器的生命周期只创建这一个bean
+	  	prototype:原型的，容器初始化时 不创建bean实例，而在每次请求时都创建一个新的Bean实例，并返回
+	   -->
+	   
+	   <!-- 
+	   	在配置文件中引入属性文件的方法
+	   	1、首先在beans中添加context Schema定义
+	   	2、在配置文件中加入如下配置:
+	   		<context:property-placeholder location="classpath:db.properties">
+	   	3、在需要的地方用${key}的方式引用属性文件中的定义
+	    -->
+	    <!-- 导入属性文件 -->
+	    <context:property-placeholder location="classpath:db.properties"/>
+	    <bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	    	<property name="user" value="${user}"></property>
+	    	<property name="password" value="${password}"></property>
+	    	<property name="driverClass" value="${driverclass}"></property>
+	    	<property name="jdbcUrl" value="${jdbcurl}"></property>
+	    </bean>
 </beans>
