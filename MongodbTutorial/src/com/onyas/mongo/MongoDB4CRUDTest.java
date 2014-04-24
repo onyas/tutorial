@@ -90,6 +90,18 @@ public class MongoDB4CRUDTest {
 		queryAll();
 		print("count:"+users.count());
 	}
+
+	@Test
+	public void remove(){
+		queryAll();
+		//删除名字叫zhangsan的
+		print(users.remove(new BasicDBObject("name","wangwu")).getN());
+		//删除年龄大于等于23的
+		print(users.remove(new BasicDBObject("age",new BasicDBObject("$gte",23))).getN());
+		queryAll();
+	}
+	
+
 }
 
 
