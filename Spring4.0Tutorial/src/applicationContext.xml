@@ -129,6 +129,8 @@
 	   <!-- 
 	   	在配置文件中引入属性文件的方法
 	   	1、首先在beans中添加context Schema定义
+	   		 xmlns:context="http://www.springframework.org/schema/context"
+	   		 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	   	2、在配置文件中加入如下配置:
 	   		<context:property-placeholder location="classpath:db.properties">
 	   	3、在需要的地方用${key}的方式引用属性文件中的定义
@@ -141,4 +143,35 @@
 	    	<property name="driverClass" value="${driverclass}"></property>
 	    	<property name="jdbcUrl" value="${jdbcurl}"></property>
 	    </bean>
+	    
+	    
+	    <!-- 
+	    SpEL表达式
+			1、使用SpEl表达式引用类的静态属性
+			<property name="rais" value="#{T(java.lang.Math).PI * 80}" />
+			2、SpEL表达式引用其他的bean
+			<property name="car" value="#{car}" />
+			3、SpEL表达式引用其他bean中的属性
+			<property name="city" value="#{address.city}" />
+			4、SpEL表达式中使用运算符
+			<property name="info" value="#{car.price > 30000 ? '土豪':'吊丝'}" />
+	     -->
+	     
+	     <!-- 
+	     IOC容器中Bean的生命周期方法
+	     	1、通过构造器或工厂方法创建Bean实例
+	     	2、为Bean的属性设置值和对其他Bean的引用
+	     	  	  将Bean实例传递给Bean后置处理器(BeforeInitial..)
+	     	3、调用Bean的初始化方法(init-method属性)
+	     		  将Bean实例传递给Bean后置处理器(AfterInitial..)
+	     	4、Bean可以使用
+	     	5、当容器关闭时，引用Bean的销毁方法(destory-method属性)
+	      -->
+	      <bean id="lifeCycle" class="com.tutorial.spring4.LifeCycle" init-method="init" destroy-method="destroy">
+	      	<property name="name" value="JustATest"></property>
+	      </bean>
+	      <!-- 
+	      	配置Bean的后置处理器，不需要配置id,IOC容器可以自动识别是一个BeanPostProcessor
+	       -->
+	      <bean class="com.tutorial.spring4.MyBeanPostProcessor"></bean>
 </beans>
