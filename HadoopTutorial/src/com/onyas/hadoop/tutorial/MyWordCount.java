@@ -29,8 +29,6 @@ public class MyWordCount {
 		@Override
 		protected void map(LongWritable key, Text value,Context context)
 				throws IOException, InterruptedException {
-			super.map(key, value, context);
-			
 			//得到文件的每一行
 			String wordline = value.toString();
 			//对得到每一行字符串进行分割
@@ -39,7 +37,7 @@ public class MyWordCount {
 				//得到分割的每一个单 词
 				String str = stringTokenizer.nextToken();
 
-				//通过上下文对象，输入Map<Text,IntWritable>，这就是上面定义的输出类型
+				//通过上下文对象，输入Map<Text,IntWritable>，这就是上面定义的输出类型 
 				word.set(str);
 				context.write(word, one);
 			}
@@ -52,11 +50,21 @@ public class MyWordCount {
 	 * 第三个为输出的Key类型,第四个为输出的value类型
 	 */
 	static class MyReduce extends Reducer<Text,IntWritable,Text,IntWritable>{
-
+		
+		private IntWritable result = new IntWritable();
+		
+		//Reducer收到Map传来的结果时，已经把相同Key的数据放在一起，比如 zhangsan-->1,1,2这样的数据，所以我们只需要遍历出现的次数，然后在累加就可以了
 		@Override
-		protected void reduce(Text key, Iterable<IntWritable> value,Context context)
+		protected void reduce(Text key, Iterable<IntWritable> values,Context context)
 				throws IOException, InterruptedException {
-			super.reduce(key, value, context);
+			//用于累加
+			int sum = 0;
+			//循环遍历Iterable
+			for(IntWritable value:values){
+				sum +=value.get();
+			}
+			result.set(sum);
+			context.write(key, result);
 		}
 		
 	}
@@ -73,14 +81,19 @@ public class MyWordCount {
 		      System.exit(2);
 		    }
 		    Job job = new Job(conf, "word count");
+		    //1、设置Job运行的类
 		    job.setJarByClass(MyWordCount.class);
+		    //2、设置 Mapper与Reducer类
 		    job.setMapperClass(MyMapper.class);
 		    job.setCombinerClass(MyReduce.class);
 		    job.setReducerClass(MyReduce.class);
+		    //3、设置输出Map的类型 
 		    job.setOutputKeyClass(Text.class);
 		    job.setOutputValueClass(IntWritable.class);
+		    //4、设置输入输出路径
 		    FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
 		    FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
+		    //5、提交Job，并等待完成
 		    System.exit(job.waitForCompletion(true) ? 0 : 1);
 	}
 	
