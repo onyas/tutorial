@@ -1,14 +1,14 @@
 package com.onyas.hadoop.tutorial;
 
 
-import static org.junit.Assert.*;
-
 import org.apache.hadoop.fs.BlockLocation;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DistributedFileSystem;
+import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.apache.hadoop.io.IOUtils;
 import org.junit.Test;
 
@@ -131,6 +131,42 @@ public class HDFSTest {
 		Path path = new Path("/wc/test/");
 		boolean isSuccess = hdfs.delete(path,true);
 		System.out.println("删除文件执行结果"+isSuccess);
+	}
+	
+	/**
+	 *获取某个文件在HDFS集群的位置
+	 */
+	@Test
+	public void testLocation() throws Exception {
+		//获取文件系统
+		FileSystem hdfs = HDFSUtil.getFileSystem();
+		Path path = new Path("/wc/input/capacity-scheduler.xml");
+		FileStatus fileStatus = hdfs.getFileStatus(path);
+		BlockLocation[] bl = hdfs.getFileBlockLocations(fileStatus, 0, fileStatus.getLen());
+		for(BlockLocation block:bl){
+			String[] hosts =block.getHosts();
+			for(String str :hosts){
+				System.out.print(str+" ");
+			}
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * 获取HDFS集群上所有节点信息
+	 */
+	@Test
+	public void testCluster() throws Exception {
+		//获取文件系统
+		FileSystem hdfs = HDFSUtil.getFileSystem();
+		DistributedFileSystem dfs = (DistributedFileSystem) hdfs;
+		DatanodeInfo[] dataNodeInfo = dfs.getDataNodeStats();
+		for(DatanodeInfo info :dataNodeInfo){
+			String hostName = info.getHostName();
+			String host = info.getHost();
+			System.out.println("HostName="+hostName);
+			System.out.println("Host="+host);
+		}
 	}
 	
 	
