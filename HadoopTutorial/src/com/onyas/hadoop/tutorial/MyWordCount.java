@@ -1,6 +1,7 @@
 package com.onyas.hadoop.tutorial;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -22,10 +23,26 @@ public class MyWordCount {
 	 */
 	static class MyMapper extends Mapper<LongWritable, Text, Text,IntWritable>{
 
+		private Text word = new Text();
+		private static final IntWritable one = new IntWritable();
+		
 		@Override
 		protected void map(LongWritable key, Text value,Context context)
 				throws IOException, InterruptedException {
 			super.map(key, value, context);
+			
+			//得到文件的每一行
+			String wordline = value.toString();
+			//对得到每一行字符串进行分割
+			StringTokenizer stringTokenizer = new StringTokenizer(wordline);
+			while(stringTokenizer.hasMoreTokens()){
+				//得到分割的每一个单 词
+				String str = stringTokenizer.nextToken();
+
+				//通过上下文对象，输入Map<Text,IntWritable>，这就是上面定义的输出类型
+				word.set(str);
+				context.write(word, one);
+			}
 		}
 		
 	}
