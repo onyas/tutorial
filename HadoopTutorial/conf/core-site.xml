@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+	<!--- global properties -->
+	<property>
+		<name>hadoop.tmp.dir</name>
+		<value>/opt/data/tmp</value>
+		<description>A base for other temporary directories.</description>
+	</property>
+	<!-- file system properties -->
+	<property>
+		<name>fs.default.name</name>
+		<!-- 这个需要跟服务器的配置一样，同时也要修改本机host文件 -->
+		<value>hdfs://hadoop-master:9000</value>
+	</property>
+</configuration>
