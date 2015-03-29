@@ -3,6 +3,7 @@ package com.onyas.hadoop.tutorial;
 
 import static org.junit.Assert.*;
 
+import org.apache.hadoop.fs.BlockLocation;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -24,7 +25,7 @@ public class HDFSTest {
 		//获取文件系统
 		FileSystem hdfs = HDFSUtil.getFileSystem();
 		//指定目录
-		Path path = new Path("/wc/test");
+		Path path = new Path("/wc");
 		FileStatus[] fileStatus = hdfs.listStatus(path);
 		for(FileStatus fs :fileStatus){
 			Path p = fs.getPath();
@@ -92,5 +93,46 @@ public class HDFSTest {
 		outPutStream.writeUTF("Hello,Hadoop");
 		IOUtils.closeStream(outPutStream);
 	}
+	
+	
+	/**
+	 *对HDFS上的文件进行重命名 
+	 */
+	@Test
+	public void testRename() throws Exception {
+		//获取文件系统
+		FileSystem hdfs = HDFSUtil.getFileSystem();
+		Path srcpath = new Path("/wc/test/touch.txt");
+		Path dstpath = new Path("/wc/test/touch.txt.bak");
+		boolean isSuccess = hdfs.rename(srcpath, dstpath);
+		System.out.println("重命名执行结果"+isSuccess);
+	}
+	
+	/**
+	 *对HDFS上的文件	删除
+	 */
+	@Test
+	public void testDelete() throws Exception {
+		//获取文件系统
+		FileSystem hdfs = HDFSUtil.getFileSystem();
+		Path path = new Path("/wc/test/touch.txt.bak");
+		boolean isSuccess = hdfs.deleteOnExit(path);
+		System.out.println("删除文件执行结果"+isSuccess);
+	}
+	
+	
+	/**
+	 *对HDFS上的文件	删除
+	 */
+	@Test
+	public void testDeleteDir() throws Exception {
+		//获取文件系统
+		FileSystem hdfs = HDFSUtil.getFileSystem();
+		Path path = new Path("/wc/test/");
+		boolean isSuccess = hdfs.delete(path,true);
+		System.out.println("删除文件执行结果"+isSuccess);
+	}
+	
+	
 	
 }
