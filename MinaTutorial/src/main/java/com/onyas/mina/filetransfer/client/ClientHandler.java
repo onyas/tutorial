@@ -15,7 +15,6 @@ public class ClientHandler extends IoHandlerAdapter{
 	
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
-		// TODO Auto-generated method stub
 		super.messageReceived(session, message);
 		
 	}
@@ -24,14 +23,13 @@ public class ClientHandler extends IoHandlerAdapter{
 		BaseMessage baseMessage = new BaseMessage();
 		baseMessage.setDataType(BeanUtil.UPLOAD_FILE);
 		FileBean bean = new FileBean();
-		File file = new File("e:\\log.log");
+		File file = new File("F:\\Downloads\\BaiduYunGuanjia_5.2.0.exe");
 		bean.setFileName(file.getName());
 		bean.setFileSize((int)file.length());
 		try {
 			FileHelper helper =new FileHelper();
 			bean.setFileContent(helper.getContent(file));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		baseMessage.setData(bean);
@@ -39,7 +37,6 @@ public class ClientHandler extends IoHandlerAdapter{
 	}
 
 	public void sessionCreated(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
 		super.sessionCreated(session);
 	}
 	

@@ -56,10 +56,10 @@ public class BaseMessageDecoder  implements MessageDecoder {
 		byte[] byteFile = context.byteFile;
 		int count = context.count;
 		while(in.hasRemaining()){
-			byte b = in.get();
+			byte b = in.get();//一个字节一个字节的读取
 			if(!context.hasReadName){//判断是否读取了文件名字
 				context.byteStr[count] = b;
-				if(count == context.strLength-1){
+				if(count == context.strLength-1){//判断是否读取完毕
 					context.fileName = new String(context.byteStr,BeanUtil.charset);
 					System.out.println(context.fileName);
 					count = -1;

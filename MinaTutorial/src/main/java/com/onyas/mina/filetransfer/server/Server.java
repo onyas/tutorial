@@ -24,7 +24,6 @@ public class Server {
 		try {
 			server.bindServer();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

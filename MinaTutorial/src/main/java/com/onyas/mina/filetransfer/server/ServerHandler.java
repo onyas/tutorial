@@ -12,18 +12,15 @@ public class ServerHandler extends IoHandlerAdapter{
 
 
 	public void sessionCreated(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
 		super.sessionCreated(session);
 	}
 
 	public void sessionOpened(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
 		super.sessionOpened(session);
 	}
 	
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
-		// TODO Auto-generated method stub
 		super.messageReceived(session, message);
 		System.out.println("==============");
 		BaseMessage baseMessage = (BaseMessage) message;
@@ -37,7 +34,6 @@ public class ServerHandler extends IoHandlerAdapter{
 
 	public void exceptionCaught(IoSession session, Throwable cause)
 			throws Exception {
-		// TODO Auto-generated method stub
 		super.exceptionCaught(session, cause);
 	}
 }
