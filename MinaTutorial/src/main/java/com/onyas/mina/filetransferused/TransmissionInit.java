@@ -16,7 +16,7 @@ public class TransmissionInit {
 	
 	public static void main(String[] args) {
 		FileServer fileServer = new FileServer();
-		ThreadPoolService threadPoolServer = new ThreadPoolService();
+		ThreadPoolService threadPoolServer = ThreadPoolService.getInstance();
 		
 		fileServer.start();
 		threadPoolServer.init();

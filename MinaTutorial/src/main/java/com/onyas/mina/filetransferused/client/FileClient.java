@@ -9,9 +9,9 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
-public class FileCilent {
+public class FileClient {
 
-	private static Logger logger = Logger.getLogger(FileCilent.class);
+	private static Logger logger = Logger.getLogger(FileClient.class);
 
 	private static NioSocketConnector connector = new NioSocketConnector();
 	

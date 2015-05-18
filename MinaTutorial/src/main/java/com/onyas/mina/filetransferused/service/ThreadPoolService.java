@@ -11,6 +11,16 @@ public class ThreadPoolService {
 	private ThreadPoolExecutor threadPool;
 	private static long excuteTimes=0;
 	private static int activeQueueSize = 50;
+	private static ThreadPoolService threadPoolService;
+	
+	private ThreadPoolService(){}
+	
+	public static synchronized ThreadPoolService getInstance(){
+		if(threadPoolService==null){
+			threadPoolService = new ThreadPoolService();
+		}
+		return threadPoolService;
+	}
 	
 	public void init(){
 		int poolSize = 50;
@@ -25,6 +35,18 @@ public class ThreadPoolService {
 	
 	
 	public void execute(Runnable task){
-		//TODO 执行任务
+		if(threadPool.getQueue().size()<activeQueueSize){
+			threadPool.execute(task);
+		}else{
+			logger.info(" threadPool  队列数超过"+activeQueueSize);
+		}
+	}
+	
+	public ThreadPoolExecutor getThreadPool() {
+		return threadPool;
+	}
+
+	public void setThreadPool(ThreadPoolExecutor threadPool) {
+		this.threadPool = threadPool;
 	}
 }
