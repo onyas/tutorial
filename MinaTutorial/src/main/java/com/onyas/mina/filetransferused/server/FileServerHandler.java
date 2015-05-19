@@ -1,12 +1,18 @@
 package com.onyas.mina.filetransferused.server;
 
+import java.io.InputStream;
+
 import org.apache.log4j.Logger;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.apache.mina.handler.stream.StreamIoHandler;
 
 import com.onyas.mina.filetransferused.helper.CommandList;
+import com.onyas.mina.filetransferused.helper.Util;
+import com.onyas.mina.filetransferused.message.SendCommandMessage;
 import com.onyas.mina.filetransferused.message.SendFileMessage;
+import com.onyas.mina.filetransferused.service.WriteTempFile;
 
 public class FileServerHandler implements IoHandler {
 
@@ -45,9 +51,17 @@ public class FileServerHandler implements IoHandler {
 			SendFileMessage sendFileMsg = (SendFileMessage) message;
 			String command = sendFileMsg.getCommand();
 			if(command.equals(CommandList.SENDFILE)){//分发文件的命令
-				//TODO 分发文件
+				Util.delFilter(session);
+				receiveFile(session, sendFileMsg);
 			}
+		}else if(message instanceof SendCommandMessage){//如果是命令
+			
 		}
+	}
+
+	private void receiveFile(IoSession session, SendFileMessage sendFileMsg) {
+		InputStream ins = (InputStream)session.getAttribute(StreamIoHandler.class);
+		new Thread(new WriteTempFile(ins, sendFileMsg.getFilePath(), sendFileMsg, session)).start(); 
 	}
 
 	public void messageSent(IoSession session, Object message) throws Exception {

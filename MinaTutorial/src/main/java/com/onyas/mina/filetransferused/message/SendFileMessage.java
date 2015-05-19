@@ -11,6 +11,8 @@ public class SendFileMessage extends BaseMessage {
     
     private String syncType;
 
+    private String filePath;
+    
 	public String getFileName() {
 		return fileName;
 	}
@@ -34,4 +36,14 @@ public class SendFileMessage extends BaseMessage {
 	public void setSyncType(String syncType) {
 		this.syncType = syncType;
 	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	
+	
 }
