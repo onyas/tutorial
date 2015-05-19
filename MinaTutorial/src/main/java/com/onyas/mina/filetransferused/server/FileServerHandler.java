@@ -1,50 +1,57 @@
 package com.onyas.mina.filetransferused.server;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.log4j.Logger;
-import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.handler.stream.StreamIoHandler;
 
 import com.onyas.mina.filetransferused.helper.CommandList;
+import com.onyas.mina.filetransferused.helper.Constant;
 import com.onyas.mina.filetransferused.helper.Util;
 import com.onyas.mina.filetransferused.message.SendCommandMessage;
 import com.onyas.mina.filetransferused.message.SendFileMessage;
 import com.onyas.mina.filetransferused.service.WriteTempFile;
 
-public class FileServerHandler implements IoHandler {
+/**
+ * 注意未覆盖sessionOpened方法，因为在里面有初始化session.最好查看父类的sessionOpened
+ * @author Administrator
+ *
+ */
+public class FileServerHandler extends StreamIoHandler {
 
 	private static Logger logger = Logger.getLogger(FileServerHandler.class);
 	
-	public void sessionCreated(IoSession session) throws Exception {
+	@Override
+	public void sessionCreated(IoSession session)  {
 		logger.info("客户端连接："+session.getRemoteAddress());
 	}
 
-	public void sessionOpened(IoSession session) throws Exception {
+	@Override
+	public void sessionClosed(IoSession session)  {
 		
 	}
 
-	public void sessionClosed(IoSession session) throws Exception {
-		
-	}
-
+	@Override
 	public void sessionIdle(IoSession session, IdleStatus status)
-			throws Exception {
+			 {
 		 logger.error("Client socket timeout,close socket.");
 	     session.close(true);
 	}
 
+	@Override
 	public void exceptionCaught(IoSession session, Throwable cause)
-			throws Exception {
+			 {
 		logger.error("Server socket exception,close socket.");
 		logger.error(cause.getMessage());
 		session.close(true);
 	}
 
+	@Override
 	public void messageReceived(IoSession session, Object message)
-			throws Exception {
+			 {
 		logger.info("服务器收到消息..");
 		
 		if(message instanceof SendFileMessage){//如果是分发文件
@@ -60,11 +67,17 @@ public class FileServerHandler implements IoHandler {
 	}
 
 	private void receiveFile(IoSession session, SendFileMessage sendFileMsg) {
-		InputStream ins = (InputStream)session.getAttribute(StreamIoHandler.class);
-		new Thread(new WriteTempFile(ins, sendFileMsg.getFilePath(), sendFileMsg, session)).start(); 
+		InputStream ins = (InputStream)session.getAttribute(Constant.KEY_IN);
+		new Thread(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session)).start(); 
 	}
 
-	public void messageSent(IoSession session, Object message) throws Exception {
+	public void messageSent(IoSession session, Object message) {
+		
+	}
+
+	@Override
+	protected void processStreamIo(IoSession session, InputStream in,
+			OutputStream out) {
 		
 	}
 
