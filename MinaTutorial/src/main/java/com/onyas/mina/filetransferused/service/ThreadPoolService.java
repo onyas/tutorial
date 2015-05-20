@@ -45,4 +45,10 @@ public class ThreadPoolService {
 	public void setThreadPool(ThreadPoolExecutor threadPool) {
 		this.threadPool = threadPool;
 	}
+	
+	public void shutdown()
+	{
+		threadPool.shutdown();
+	}
+	
 }

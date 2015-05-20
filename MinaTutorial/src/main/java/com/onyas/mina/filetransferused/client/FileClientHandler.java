@@ -28,7 +28,7 @@ public class FileClientHandler extends StreamIoHandler {
 
 	@Override
 	public void sessionClosed(IoSession session)   {
-
+		
 	}
 
 	@Override

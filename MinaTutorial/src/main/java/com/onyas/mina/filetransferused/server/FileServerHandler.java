@@ -36,11 +36,6 @@ public class FileServerHandler extends StreamIoHandler {
 	}
 
 	@Override
-	public void sessionClosed(IoSession session)  {
-		
-	}
-
-	@Override
 	public void sessionIdle(IoSession session, IdleStatus status)
 			 {
 		 logger.error("Client socket timeout,close socket.");
@@ -53,6 +48,7 @@ public class FileServerHandler extends StreamIoHandler {
 		logger.error("Server socket exception,close socket.");
 		logger.error(cause.getMessage());
 		session.close(true);
+		threadPoolService.shutdown();
 	}
 
 	@Override
