@@ -15,6 +15,7 @@ import com.onyas.mina.filetransferused.helper.CommandList;
 import com.onyas.mina.filetransferused.helper.Util;
 import com.onyas.mina.filetransferused.message.SendCommandMessage;
 import com.onyas.mina.filetransferused.message.SendFileMessage;
+import com.onyas.mina.filetransferused.service.ThreadPoolService;
 import com.onyas.mina.filetransferused.service.WriteTempFile;
 
 /**
@@ -26,9 +27,12 @@ public class FileServerHandler extends StreamIoHandler {
 
 	private static Logger logger = Logger.getLogger(FileServerHandler.class);
 	
+	private ThreadPoolService threadPoolService;
+	
 	@Override
 	public void sessionCreated(IoSession session)  {
 		logger.info("客户端连接："+session.getRemoteAddress());
+		threadPoolService = ThreadPoolService.getInstance();
 	}
 
 	@Override
@@ -55,7 +59,6 @@ public class FileServerHandler extends StreamIoHandler {
 	public void messageReceived(IoSession session, Object message)
 			 {
 		logger.info("服务器收到消息..");
-		
 		if(message instanceof SendFileMessage){//如果是分发文件
 			SendFileMessage sendFileMsg = (SendFileMessage) message;
 			String command = sendFileMsg.getCommand();
@@ -76,8 +79,8 @@ public class FileServerHandler extends StreamIoHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		//TODO 每次都是new一个线程，资源消耗比较大，要改为线程池
-		new Thread(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session)).start(); 
+//		new Thread(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session)).start(); 
+		threadPoolService.execute(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session));
 	}
 
 	public void messageSent(IoSession session, Object message) {

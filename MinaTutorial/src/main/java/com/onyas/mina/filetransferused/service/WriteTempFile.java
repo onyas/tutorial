@@ -28,6 +28,7 @@ public class WriteTempFile implements Runnable {
 	private File file;
 	
 	private RandomAccessFile randomAccessFile;
+	
 	public WriteTempFile() {
 	}
 

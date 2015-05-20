@@ -14,13 +14,16 @@ import com.onyas.mina.filetransferused.helper.Constant;
 import com.onyas.mina.filetransferused.helper.Util;
 import com.onyas.mina.filetransferused.message.SendFileMessage;
 import com.onyas.mina.filetransferused.service.ReadTempFile;
+import com.onyas.mina.filetransferused.service.ThreadPoolService;
 
 public class FileClientHandler extends StreamIoHandler {
 	private static Logger logger = Logger.getLogger(FileClientHandler.class);
+	
+	private ThreadPoolService threadPoolService;
 
 	@Override
 	public void sessionCreated(IoSession session)   {
-
+		threadPoolService = ThreadPoolService.getInstance();
 	}
 
 	@Override
@@ -84,8 +87,8 @@ public class FileClientHandler extends StreamIoHandler {
 
 	private void sendFile(IoSession session, SendFileMessage info) {
 		  File file = (File)session.getAttribute(Constant.KEY_FILE);
-//		  TODO 每次都是new一个线程，资源消耗比较大，要改为线程池
-		  new Thread (new ReadTempFile(file, info, session)).start();
+//		  new Thread (new ReadTempFile(file, info, session)).start();
+		  threadPoolService.execute(new ReadTempFile(file, info, session));
 	}
 
 	@Override
