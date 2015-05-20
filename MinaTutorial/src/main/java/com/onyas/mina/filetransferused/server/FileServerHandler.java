@@ -1,5 +1,8 @@
 package com.onyas.mina.filetransferused.server;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -9,7 +12,6 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.handler.stream.StreamIoHandler;
 
 import com.onyas.mina.filetransferused.helper.CommandList;
-import com.onyas.mina.filetransferused.helper.Constant;
 import com.onyas.mina.filetransferused.helper.Util;
 import com.onyas.mina.filetransferused.message.SendCommandMessage;
 import com.onyas.mina.filetransferused.message.SendFileMessage;
@@ -67,7 +69,13 @@ public class FileServerHandler extends StreamIoHandler {
 	}
 
 	private void receiveFile(IoSession session, SendFileMessage sendFileMsg) {
-		InputStream ins = (InputStream)session.getAttribute(Constant.KEY_IN);
+//		InputStream ins = (InputStream)session.getAttribute(Constant.KEY_IN);
+		InputStream ins=null;
+		try {
+			ins = new FileInputStream(new File(sendFileMsg.getFilePath()));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		new Thread(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session)).start(); 
 	}
 

@@ -87,6 +87,7 @@ public class FileClientHandler extends StreamIoHandler {
 		  new Thread (new ReadTempFile(file, info, session)).start();
 	}
 
+	@Override
 	public void messageSent(IoSession session, Object message)   {
 
 	}
