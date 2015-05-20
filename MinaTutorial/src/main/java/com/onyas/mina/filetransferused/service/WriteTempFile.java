@@ -14,7 +14,7 @@ import com.onyas.mina.filetransferused.message.SendFileMessage;
 
 public class WriteTempFile implements Runnable {
 	
-	Logger logger = Logger.getLogger(WriteTempFile.class);
+	private static Logger logger = Logger.getLogger(WriteTempFile.class);
 	public static final int BUFFER_SIZE = 1024*10;
 
 	private DataInputStream dataInputStream=null;
@@ -82,7 +82,7 @@ public class WriteTempFile implements Runnable {
 //	             }
 	        }
            try {
-        	   Util.addFilter(session);
+        	   session = Util.addFilter(session);
                session.write(returnInfo);
                if(randomAccessFile!=null)randomAccessFile.close();
            } catch (Exception e) {

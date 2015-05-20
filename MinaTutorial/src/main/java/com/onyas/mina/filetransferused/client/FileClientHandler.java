@@ -72,10 +72,11 @@ public class FileClientHandler extends StreamIoHandler {
             }else if(command.equals(CommandList.SENDSEARCH_FILE)){//send search file
             	sendFile(session, info);
             }else if(command.equals(CommandList.RETURN_STATUS)){
-                //文件接收入库成功
+                //文件接收入库成功，在这里做状态更新
                 if(answer == 0){
-                //文件接收端异常
-                }else{
+                	logger.info("文档分发成功");
+                }else{//文件接收端异常
+                	logger.info("文档分发失败");
                 }
                 session.close(true);
                 if(file.exists()){
