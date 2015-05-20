@@ -15,8 +15,9 @@ import com.onyas.mina.filetransferused.message.SendFileMessage;
 public class WriteTempFile implements Runnable {
 	
 	Logger logger = Logger.getLogger(WriteTempFile.class);
+	public static final int BUFFER_SIZE = 1024*10;
 
-	private DataInputStream in;
+	private DataInputStream dataInputStream=null;
 	
 	private String filePath;
 	
@@ -32,7 +33,7 @@ public class WriteTempFile implements Runnable {
 
 	public WriteTempFile(InputStream ins, String filePath,
 			SendFileMessage sendFileMsg, IoSession session) {
-		this.in = new DataInputStream(ins);
+		this.dataInputStream = new DataInputStream(ins);
 		this.filePath = filePath;
 		this.sendFileMsg = sendFileMsg;
 		this.session = session;
@@ -45,20 +46,20 @@ public class WriteTempFile implements Runnable {
         returnInfo.setCommand(CommandList.RETURN_STATUS);
         returnInfo.setAnswer(-1);
         
-        byte[] bufferByte = new byte[1024];
+        byte[] bufferByte = new byte[BUFFER_SIZE];
         int tempData = 0;
         long l = returnInfo.getFileLength();
         logger.info(" Begin write to temp file.");
         try {
             file = new File(filePath);
             randomAccessFile = new RandomAccessFile(file, "rw");
-            //断点
-            randomAccessFile.seek(sendFileMsg.getFileLength());
+//            randomAccessFile.seek(sendFileMsg.getFileLength());
+            randomAccessFile.seek(0);
             //写入临时文件
             if(file.exists() && l>0 && l==file.length() ){
                 logger.info(" File length == breakPoint.");
             }else{
-                while ((tempData = in.read(bufferByte)) != -1) {
+                while ((tempData = dataInputStream.read(bufferByte)) != -1) {
                     l = l + tempData;
                     randomAccessFile.write(bufferByte, 0, tempData);
                     randomAccessFile.getFD().sync();

@@ -1,11 +1,13 @@
 package com.onyas.mina.filetransferused.client;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.log4j.Logger;
-import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.apache.mina.handler.stream.StreamIoHandler;
 
 import com.onyas.mina.filetransferused.helper.CommandList;
 import com.onyas.mina.filetransferused.helper.Constant;
@@ -13,36 +15,37 @@ import com.onyas.mina.filetransferused.helper.Util;
 import com.onyas.mina.filetransferused.message.SendFileMessage;
 import com.onyas.mina.filetransferused.service.ReadTempFile;
 
-public class FileClientHandler implements IoHandler {
+public class FileClientHandler extends StreamIoHandler {
 	private static Logger logger = Logger.getLogger(FileClientHandler.class);
 
-	public void sessionCreated(IoSession session) throws Exception {
+	@Override
+	public void sessionCreated(IoSession session)   {
 
 	}
 
-	public void sessionOpened(IoSession session) throws Exception {
+	@Override
+	public void sessionClosed(IoSession session)   {
 
 	}
 
-	public void sessionClosed(IoSession session) throws Exception {
-
-	}
-
+	@Override
 	public void sessionIdle(IoSession session, IdleStatus status)
-			throws Exception {
+			  {
 		logger.error("Client socket timeout,close socket.");
 		session.close(true);
 	}
 
+	@Override
 	public void exceptionCaught(IoSession session, Throwable cause)
-			throws Exception {
+			  {
 		logger.error("Client socket exception,close socket.");
 		logger.error(cause.getMessage());
 		session.close(true);
 	}
 
+	@Override
 	public void messageReceived(IoSession session, Object message)
-			throws Exception {
+			  {
 		if(message instanceof SendFileMessage){
 			SendFileMessage info = (SendFileMessage)message;
             File file = (File)session.getAttribute(Constant.KEY_FILE);
@@ -84,8 +87,13 @@ public class FileClientHandler implements IoHandler {
 		  new Thread (new ReadTempFile(file, info, session)).start();
 	}
 
-	public void messageSent(IoSession session, Object message) throws Exception {
+	public void messageSent(IoSession session, Object message)   {
 
+	}
+
+	@Override
+	protected void processStreamIo(IoSession session, InputStream in,
+			OutputStream out) {
 	}
 
 }

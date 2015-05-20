@@ -7,6 +7,7 @@ import org.apache.mina.core.session.IoSession;
 
 import com.onyas.mina.filetransferused.client.FileClient;
 import com.onyas.mina.filetransferused.helper.CommandList;
+import com.onyas.mina.filetransferused.helper.Constant;
 import com.onyas.mina.filetransferused.message.SendFileMessage;
 import com.onyas.mina.filetransferused.pojo.DsSyncFileDTO;
 
@@ -20,11 +21,13 @@ public class TcpSyncServiceImpl extends AbstractSyncService implements
 		sendFileMsg.setCommand(CommandList.SENDFILE);
 		sendFileMsg.setFileName(file.getName());
 		sendFileMsg.setFileLength(file.length());
+		sendFileMsg.setFilePath(file.getAbsolutePath());
 		IoSession session =FileClient.createSesion(getIp(), getPort());
 		if(session == null){
             throw new Exception(" Can not connect mina server on:["+getIp()+":"+getPort()+"]");
         }
         logger.info(" uploadfile server url = " + getIp() + ":" +getPort()+ ",filename=" + file.getName() ) ;
+        session.setAttribute(Constant.KEY_FILE, file);
         session.getConfig().setBothIdleTime(5000);
         session.write(sendFileMsg);
 	}
