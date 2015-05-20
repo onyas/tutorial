@@ -76,6 +76,7 @@ public class FileServerHandler extends StreamIoHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		//TODO 每次都是new一个线程，资源消耗比较大，要改为线程池
 		new Thread(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session)).start(); 
 	}
 

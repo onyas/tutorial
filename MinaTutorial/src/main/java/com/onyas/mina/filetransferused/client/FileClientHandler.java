@@ -84,6 +84,7 @@ public class FileClientHandler extends StreamIoHandler {
 
 	private void sendFile(IoSession session, SendFileMessage info) {
 		  File file = (File)session.getAttribute(Constant.KEY_FILE);
+//		  TODO 每次都是new一个线程，资源消耗比较大，要改为线程池
 		  new Thread (new ReadTempFile(file, info, session)).start();
 	}
 
