@@ -27,11 +27,6 @@ public class FileClientHandler extends StreamIoHandler {
 	}
 
 	@Override
-	public void sessionClosed(IoSession session)   {
-		
-	}
-
-	@Override
 	public void sessionIdle(IoSession session, IdleStatus status)
 			  {
 		logger.error("Client socket timeout,close socket.");
@@ -50,16 +45,16 @@ public class FileClientHandler extends StreamIoHandler {
 	public void messageReceived(IoSession session, Object message)
 			  {
 		if(message instanceof SendFileMessage){
-			SendFileMessage info = (SendFileMessage)message;
+			SendFileMessage sendFileMsg = (SendFileMessage)message;
             File file = (File)session.getAttribute(Constant.KEY_FILE);
-            String command = info.getCommand();
-            int answer = info.getAnswer();
+            String command = sendFileMsg.getCommand();
+            int answer = sendFileMsg.getAnswer();
             if(command.equals(CommandList.SENDFILE)){
                 logger.info("Check file exist return status(0-not exist,1-has existed,2-exception) is ["+answer+"]");
                 //文件不存在，需要上传
                 if(answer == 0){
                 	Util.delFilter(session);
-                    sendFile(session, info);
+                    readFile(session, sendFileMsg);
                 //文件已存在，不需上传
                 }else if(answer == 1){
                     logger.info("There has the same file in documentum.");
@@ -69,8 +64,6 @@ public class FileClientHandler extends StreamIoHandler {
                     logger.info("Check file exist exception.");
                     session.close(true);
                 }
-            }else if(command.equals(CommandList.SENDSEARCH_FILE)){//send search file
-            	sendFile(session, info);
             }else if(command.equals(CommandList.RETURN_STATUS)){
                 //文件接收入库成功，在这里做状态更新
                 if(answer == 0){
@@ -79,14 +72,14 @@ public class FileClientHandler extends StreamIoHandler {
                 	logger.info("文档分发失败");
                 }
                 session.close(true);
-                if(file.exists()){
-                    file.delete();
-                }
+//                if(file.exists()){
+//                    file.delete();
+//                }
             }
 		}
 	}
 
-	private void sendFile(IoSession session, SendFileMessage info) {
+	private void readFile(IoSession session, SendFileMessage info) {
 		  File file = (File)session.getAttribute(Constant.KEY_FILE);
 //		  new Thread (new ReadTempFile(file, info, session)).start();
 		  threadPoolService.execute(new ReadTempFile(file, info, session));

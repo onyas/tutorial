@@ -14,7 +14,8 @@ import com.onyas.mina.filetransferused.message.SendFileMessage;
 
 public class ReadTempFile implements Runnable {
 
-	Logger logger = Logger.getLogger(ReadTempFile.class);
+	private static final Logger logger = Logger.getLogger(ReadTempFile.class);
+	public static final int BUFFER_SIZE = 1024*10;
 
 	private File file;
 
@@ -33,22 +34,22 @@ public class ReadTempFile implements Runnable {
 	}
 
 	public void run() {
-		OutputStream out = (OutputStream) session
-				.getAttribute(Constant.KEY_OUT);
+		OutputStream out = (OutputStream) session.getAttribute(Constant.KEY_OUT);
 		Long startPos = sendFileMsg.getFileLength();
 		RandomAccessFile rafile = null;
 		try {
-			logger.info("Write file to session.");
+			logger.info("客户端开始向session中写入数据");
 			rafile = new RandomAccessFile(file, "r");
-			rafile.seek(startPos);
-			byte[] buf = new byte[1024];
+//			rafile.seek(startPos);
+			rafile.seek(0);
+			byte[] buf = new byte[BUFFER_SIZE];
 			int realReadSize = -1;
 			while ((realReadSize = rafile.read(buf)) != -1) {
 				out.write(buf, 0, realReadSize);
 				out.flush();
 			}
-			Util.addFilter(session);
-			logger.info("Write file to session complete!");
+			session = Util.addFilter(session);
+			logger.info("客户端完成向session中写入数据");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			session.close(true);
@@ -56,7 +57,7 @@ public class ReadTempFile implements Runnable {
 			try {
 				if (file.exists()) {
 					rafile.close();
-					file.delete();
+//					file.delete();
 				}
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);

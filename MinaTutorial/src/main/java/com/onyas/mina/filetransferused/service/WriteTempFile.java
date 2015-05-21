@@ -50,7 +50,7 @@ public class WriteTempFile implements Runnable {
         byte[] bufferByte = new byte[BUFFER_SIZE];
         int tempData = 0;
         long l = returnInfo.getFileLength();
-        logger.info(" Begin write to temp file.");
+        logger.info(" 服务器开始写入临时文件 ");
         try {
             file = new File(filePath);
             randomAccessFile = new RandomAccessFile(file, "rw");
@@ -67,7 +67,7 @@ public class WriteTempFile implements Runnable {
                     if(l == sendFileMsg.getFileLength()) break;
                 }
             }
-            logger.info(" Write to temp file compelete.");
+            logger.info(" 服务器开始写入临时文件完毕  ");
             //判断文件是否接受完毕
             flag= sendFileMsg.getFileLength()==file.length()?true:false;
         }catch(Exception e){
