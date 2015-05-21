@@ -72,14 +72,8 @@ public class FileServerHandler extends StreamIoHandler {
 
 	private void receiveFile(IoSession session, SendFileMessage sendFileMsg) {
 		InputStream ins = (InputStream)session.getAttribute(Constant.KEY_IN);
-		/*InputStream ins=null;
-		try {
-			ins = new FileInputStream(new File(sendFileMsg.getFilePath()));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}*/
 //		new Thread(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session)).start(); 
-		threadPoolService.execute(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session));
+		threadPoolService.execute(new WriteTempFile(ins, sendFileMsg.getFileName(), sendFileMsg, session));
 	}
 
 	public void messageSent(IoSession session, Object message) {
