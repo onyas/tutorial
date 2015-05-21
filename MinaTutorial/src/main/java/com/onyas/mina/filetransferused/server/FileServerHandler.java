@@ -1,8 +1,5 @@
 package com.onyas.mina.filetransferused.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -12,6 +9,7 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.handler.stream.StreamIoHandler;
 
 import com.onyas.mina.filetransferused.helper.CommandList;
+import com.onyas.mina.filetransferused.helper.Constant;
 import com.onyas.mina.filetransferused.helper.Util;
 import com.onyas.mina.filetransferused.message.SendCommandMessage;
 import com.onyas.mina.filetransferused.message.SendFileMessage;
@@ -59,22 +57,27 @@ public class FileServerHandler extends StreamIoHandler {
 			SendFileMessage sendFileMsg = (SendFileMessage) message;
 			String command = sendFileMsg.getCommand();
 			if(command.equals(CommandList.SENDFILE)){//分发文件的命令
-				Util.delFilter(session);
-				receiveFile(session, sendFileMsg);
+				if(sendFileMsg.getAnswer()==0){
+					session.write(sendFileMsg);//发往客户端，查看FileClientHandler
+					session = Util.delFilter(session);
+					receiveFile(session, sendFileMsg);
+				}
 			}
 		}else if(message instanceof SendCommandMessage){//如果是命令
 			
-		}
+		}else{
+            super.messageReceived(session, message);
+        }
 	}
 
 	private void receiveFile(IoSession session, SendFileMessage sendFileMsg) {
-//		InputStream ins = (InputStream)session.getAttribute(Constant.KEY_IN);
-		InputStream ins=null;
+		InputStream ins = (InputStream)session.getAttribute(Constant.KEY_IN);
+		/*InputStream ins=null;
 		try {
 			ins = new FileInputStream(new File(sendFileMsg.getFilePath()));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
+		}*/
 //		new Thread(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session)).start(); 
 		threadPoolService.execute(new WriteTempFile(ins, "E:\\1.txt", sendFileMsg, session));
 	}
