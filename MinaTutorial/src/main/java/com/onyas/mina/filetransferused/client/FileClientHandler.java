@@ -76,7 +76,9 @@ public class FileClientHandler extends StreamIoHandler {
 //                    file.delete();
 //                }
             }
-		}
+		}else{
+            super.messageReceived(session, message);
+        }
 	}
 
 	private void readFile(IoSession session, SendFileMessage info) {
