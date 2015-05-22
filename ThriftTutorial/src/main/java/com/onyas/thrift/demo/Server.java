@@ -14,10 +14,10 @@ public class Server {
 			TServerSocket serverTransport = new TServerSocket(7911);
 			Something.Processor processor = new Something.Processor(
 					new SomethingImpl());
-			
-			
+
 			Factory protFactory = new TBinaryProtocol.Factory(true, true);
-			Args args = new Args(serverTransport);
+			TThreadPoolServer.Args args = new TThreadPoolServer.Args(
+					serverTransport).processor(processor).protocolFactory(protFactory);
 			TServer server = new TThreadPoolServer(args);
 			System.out.println("Starting server on port 7911 ...");
 			server.serve();
