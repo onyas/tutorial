@@ -1,0 +1,50 @@
+{"resources": {
+    "windows": {
+        "clazz": "com.sgcc.uds.fs.client.content.centralize.StorageResourceCentralize",
+        "code": "windows",
+        "contentServiceClass": "com.sgcc.uds.fs.client.content.centralize.ContentServiceCentralizeImpl",
+        "hosts": ["localhost", "127.0.0.1"],
+        "items": [
+            {
+                "index": 1,
+                "limitSize": 209715200,
+                "path": "e:/temp/one",
+                "usedSize": 0
+            },
+            {
+                "index": 2,
+                "limitSize": -2147483648,
+                "path": "e:/temp/two",
+                "usedSize": 0
+            }
+        ],
+        "laveSize": 104857600
+    },
+    "linux": {
+        "clazz": "com.sgcc.uds.fs.client.content.centralize.StorageResourceCentralize",
+        "code": "linux",
+        "contentServiceClass": "com.sgcc.uds.fs.client.content.centralize.ContentServiceCentralizeImpl",
+        "hosts": ["127.0.0.1"],
+        "items": [
+            {
+                "index": 1,
+                "limitSize": 209715200,
+                "path": "/tmp/uds_fs_one",
+                "usedSize": 0
+            },
+            {
+                "index": 2,
+                "limitSize": -2147483648,
+                "path": "/tmp/uds_fs_two",
+                "usedSize": 0
+            }
+        ],
+        "laveSize": 104857600
+    },
+    "riakcs": {
+        "clazz": "com.sgcc.uds.fs.client.content.riakcs.StorageResourceRiakcs",
+        "code": "riakcs",
+        "contentServiceClass": "com.sgcc.uds.fs.client.content.riakcs.ContentServiceRiakcsImpl",
+        "hosts": ["35.s3.sgcc.com.cn", "36.s3.sgcc.com.cn", "41.s3.sgcc.com.cn"]
+    }
+}}

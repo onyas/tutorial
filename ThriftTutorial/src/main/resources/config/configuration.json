@@ -1,0 +1,144 @@
+{"uds": {
+    "fs": {
+        "metaserver": {
+            "cluster_name": {
+                "caption": "元数据服务器集群名称",
+                "value": "fs_cluster_metaserver"
+            },
+            "cluster_ips": {
+                "caption": "元数据服务器集群节点IP，请用','分隔",
+                "value": "127.0.0.1"
+            },
+            "mongodb_servers": {
+                "caption": "mongodb集群服务器地址，格式：IP1:端口，多个服务器之间用“,”分隔",
+                "value": "10.142.49.230:27017"
+            },
+            "dbname": {
+                "caption": "mongodb数据库名",
+                "value": "uds_fs"
+            },
+            "dbuser": {
+                "caption": "mongodb用户名",
+                "value": "uds_fs"
+            },
+            "dbpass": {
+                "caption": "mongodb密码",
+                "value": "pa44w0rd"
+            },
+            "dbpool_size": {
+                "caption": "mongodb的连接池大小",
+                "value": "1000"
+            },
+            "dbblock_size": {
+                "caption": "mongodb连接池等待连接的大小",
+                "value": "5000"
+            },
+            "meta_collection_name": {
+                "caption": "保存元数据的集合名",
+                "value": "metadata"
+            },
+            "user_collection_name": {
+                "caption": "保存用户信息的集合名",
+                "value": "user"
+            },
+            "thrift_server_hosts": {
+                "caption": "metaserver的thrift服务地址",
+                "value": "10.142.49.238"
+            },
+            "thrift_server_port": {
+                "caption": "thrift服务监听端口",
+                "value": "7911"
+            }
+        },
+        "nameserver": {
+            "cluster_name": {
+                "caption": "Nameserver服务器集群名称",
+                "value": "fs_cluster_nameserver"
+            },
+            "cluster_ips": {
+                "caption": "Nameserver服务器集群节点IP，请用','分隔",
+                "value": "127.0.0.1"
+            },
+            "riak_hosts": {
+                "caption": "riak地址",
+                "value": "10.142.49.35,10.142.49.36,10.142.49.41"
+            },
+            "riak_poolSize": {
+                "caption": "riak单节点连接池大小",
+                "value": "30"
+            },
+            "riak_initPoolSize": {
+                "caption": "riak单节点连接池初始化的连接数",
+                "value": "10"
+            },
+            "riak_port": {
+                "caption": "riak提供的pb协议访问端口",
+                "value": "8087"
+            },
+            "nameBucket_name": {
+                "caption": "保存文件路径信息的bucket名称",
+                "value": "nameBucket"
+            },
+            "userBucket_name": {
+                "caption": "保存用户信息的bucket名称",
+                "value": "userBucket"
+            },
+            "thrift_server_hosts": {
+                "caption": "nameserver的thrift服务地址",
+                "value": "10.142.49.239"
+            },
+            "thrift_server_port": {
+                "caption": "nameserver的thrift服务监听端口",
+                "value": "7912"
+            }
+        },
+        "contentserver": {
+            "cluster_name": {
+                "caption": "集中式内容服务器集群名称",
+                "value": "fs_cluster_contentserver"
+            },
+            "cluster_ips": {
+                "caption": "集中式内容服务器集群名称节点IP，请用','分隔",
+                "value": "127.0.0.1"
+            },
+            "server_port": {
+                "caption": "",
+                "value": "8080"
+            },
+            "message_port": {
+                "caption": "",
+                "value": "8088"
+            }
+        },
+        "riakcsContentserver": {
+            "access_key": {
+                "caption": "riakcs中分配的访问密钥",
+                "value": "VN3PTE1UCQWQ_LHSMJXW"
+            },
+            "secret_key": {
+                "caption": "riakcs中分配的安全密钥",
+                "value": "M79ZgWRs4pwYR6_hlwKe5SwcZkxPN7rd0TYPWQ=="
+            },
+            "http_prot": {
+                "caption": "riakcs服务器的访问端口",
+                "value": "8070"
+            }
+        },
+        "sys": {
+            "sys_temp_dir": {
+                "linux": {
+                    "caption": "文件临时存放路径",
+                    "value": "/tmp4"
+                },
+                "windows": {
+                    "caption": "文件临时存放路径",
+                    "value": "c:/temp"
+                }
+            },
+            "default_store_resource_code":{
+                "caption": "系统默认存储资源码",
+                "value": "linux"
+            }
+        }
+    }
+}}
